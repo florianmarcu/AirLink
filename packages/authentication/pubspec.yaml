@@ -1,0 +1,22 @@
+name: authentication
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^1.0.3	
+  firebase_auth: 	
+  cloud_firestore: ^1.0.2
+  flutter_facebook_auth:
+  google_sign_in: 
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+    
+flutter:
+  uses-material-design: true

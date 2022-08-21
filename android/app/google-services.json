@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "716418195839",
+    "project_id": "airlink-63554",
+    "storage_bucket": "airlink-63554.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716418195839:android:aae1508e1b26d1a6a2ba4a",
+        "android_client_info": {
+          "package_name": "ro.transport.transport_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716418195839-d18vk06mdovettvsrjbop35rghov120r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ro.transport.transport_app",
+            "certificate_hash": "758a37d821dbf09a970d7253176fe8ac8683cf77"
+          }
+        },
+        {
+          "client_id": "716418195839-s567jjn5mh6e33ruq66s5rviqirgqpg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUo8I-NO5KdS4mkljPIp_xQMcdaLHeB4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716418195839-s567jjn5mh6e33ruq66s5rviqirgqpg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
