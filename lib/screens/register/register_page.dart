@@ -54,6 +54,7 @@ class RegisterPage extends StatelessWidget {
                           minimumSize: MaterialStateProperty.all<Size>(Size.zero)
                         ),
                         child: Text("Log in", style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          fontSize: 15,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.normal,
                           color:  Theme.of(context).colorScheme.secondary

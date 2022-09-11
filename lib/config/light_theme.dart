@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 Color _tertiaryColor = Color(0xFF30475E);
 Color _highlightColor = Colors.white;
 Color _primaryColor = Color(0xFF222831);
-Color _secondaryColor = Color(0xFFF05454);
+Color _secondaryColor = Color(0xFFD65A31);
 /// The color of the text, used in TextTheme
-Color _textColor = Colors.black;
+Color _textColor = _primaryColor;
+// Color _textColor = Colors.black;
+// Color _splashColor = Color(0xFF95b1db);
 Color _splashColor = Colors.grey[300]!;
+Color _canvasColor = Color(0xFFE8E8E8);
 
 double? textScaleFactor = 1;
 
@@ -17,7 +20,7 @@ ThemeData theme(BuildContext context){
     splashColor: _splashColor,
     primaryColor: _primaryColor,
     highlightColor: _highlightColor,
-    canvasColor: Color(0xFFE8E8E8),
+    canvasColor: _canvasColor,
     fontFamily: 'Raleway',
     iconTheme: _iconTheme,
     inputDecorationTheme: _inputDecorationTheme,
@@ -29,9 +32,21 @@ ThemeData theme(BuildContext context){
     appBarTheme: _appBarTheme,
     snackBarTheme: _snackBarTheme,
     bottomNavigationBarTheme: _bottomNavigationBarTheme,
-    floatingActionButtonTheme: _floatingActionButtonTheme
+    floatingActionButtonTheme: _floatingActionButtonTheme,
+    timePickerTheme: _timePickerThemeData,
+    radioTheme: _radioThemeData
   );
 }
+
+RadioThemeData _radioThemeData = RadioThemeData(
+  fillColor: MaterialStateProperty.all<Color>(_primaryColor),
+
+);
+
+TimePickerThemeData _timePickerThemeData = TimePickerThemeData(
+  backgroundColor: _canvasColor,
+  
+);
 
 ColorScheme _colorScheme = ColorScheme(
   primary: _primaryColor,
@@ -51,8 +66,8 @@ ColorScheme _colorScheme = ColorScheme(
 
 TextTheme _textTheme = TextTheme(
   subtitle2: TextStyle(
-    color: Color(0xFFE8E8E8),
-    fontSize: 13
+    color: _canvasColor,
+    fontSize: 13*(1/textScaleFactor!)
   ),
   /// Subtitle1 refers to the input style in a text field
   subtitle1: TextStyle(
@@ -61,45 +76,45 @@ TextTheme _textTheme = TextTheme(
   /// Should be for text within AppBar? (NOT YET)
   /// Used for Place's name throughout the app
   headline6: TextStyle(
-    color: _textColor,
-    fontSize: 20*(1/textScaleFactor!),
-    fontWeight: FontWeight.bold
+    color: _canvasColor,
+    fontSize: 16*(1/textScaleFactor!),
+    //fontWeight: FontWeight.bold
   ),
   /// Small text in TextButton
   headline5: TextStyle(
-    color: _highlightColor,
+    color: _canvasColor,
     fontSize: 20*(1/textScaleFactor!),
-    fontStyle: FontStyle.italic,
-    fontWeight: FontWeight.bold
+    // fontStyle: FontStyle.italic,
+    //fontWeight: FontWeight.bold
   ),
   /// Used inside "Detail" class
   /// Same size as overline but with FontWeight.bold
   labelMedium: TextStyle(
-    color: _textColor,
-    fontSize: 15*(1/textScaleFactor!),
-    fontWeight: FontWeight.bold
+    color: _primaryColor,
+    fontSize: 22*(1/textScaleFactor!),
+    //fontWeight: FontWeight.bold
   ),
   /// Small white text used within text buttons (in filter)
   caption: TextStyle(
-    color: _highlightColor,
-    fontSize: 12*(1/textScaleFactor!),
+    color: _secondaryColor,
+    fontSize: 14*(1/textScaleFactor!),
   ),
   /// Used inside "Detail" class
   /// Same size as labelMedium but without FontWeight.bold
   overline: TextStyle(
     letterSpacing: 0,
-    color: _textColor,
+    color: _primaryColor,
     fontSize: 13*(1/textScaleFactor!),
   ),
   /// Text within AppBar
   headline4: TextStyle(
-    color: _highlightColor,
+    color: _canvasColor,
     fontSize: 22*(1/textScaleFactor!),
     fontWeight: FontWeight.bold
   ),
   /// Large text within body
   headline3: TextStyle(
-    color: _textColor,
+    color: _primaryColor,
     fontSize: 30*(1/textScaleFactor!),
     fontWeight: FontWeight.bold
   ),
@@ -225,13 +240,15 @@ InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
 );
 
 BottomNavigationBarThemeData _bottomNavigationBarTheme = BottomNavigationBarThemeData(
+  // showSelectedLabels: false,
+  // showUnselectedLabels: false,
   elevation: 0,
-  selectedItemColor: _primaryColor,
+  selectedItemColor: _secondaryColor,
   // backgroundColor: Colors.grey[200],
-  backgroundColor: _highlightColor,
+  backgroundColor: _canvasColor,
   selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
   unselectedLabelStyle: TextStyle(color: Colors.black),
-  unselectedItemColor: Colors.black.withOpacity(0.65),
+  unselectedItemColor: _primaryColor,
 );
 
 AppBarTheme _appBarTheme = AppBarTheme(
@@ -239,9 +256,9 @@ AppBarTheme _appBarTheme = AppBarTheme(
   backgroundColor: Colors.transparent,
   titleTextStyle: TextStyle(
     color: _primaryColor,
-    fontSize: 30*(1/textScaleFactor!),
+    fontSize: 25*(1/textScaleFactor!),
     fontWeight: FontWeight.bold,  
-    fontFamily: 'Raleway'
+    //fontFamily: 'Raleway'
   )
 );
 

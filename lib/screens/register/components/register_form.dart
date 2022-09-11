@@ -16,7 +16,7 @@ class RegisterForm extends StatelessWidget {
             decoration: InputDecoration(
               labelText: "Nume",
             ),
-           // onChanged: (email) => provider.setEmail(email),
+            onChanged: (name) => provider.setName(name),
           ),
           SizedBox(height: 20),
           /// Email field
@@ -45,6 +45,9 @@ class RegisterForm extends StatelessWidget {
           ),
           SizedBox(height: 30,),
           TextButton(
+            style: Theme.of(context).textButtonTheme.style!.copyWith(
+              backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary)              
+            ),
             onPressed: () => provider.register(context),
             child: Text("Înregistrare"),
           )

@@ -28,9 +28,28 @@ flutter:
 
   uses-material-design: true
 
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/icons/cancel.png
+    - assets/icons/history.png
+    - assets/icons/filter.png
+    - assets/icons/time.png
+    - assets/icons/clear-filter.png
+    - assets/icons/three-dots.png
+    - assets/icons/three-lines.png
+    - assets/icons/passenger.png
+    - assets/icons/check-in.png
+    - assets/icons/hand.png
+    - assets/icons/backpack.png
+    - assets/icons/information.png
+    - assets/icons/airline.png
+    - assets/icons/check.png
+    - assets/icons/flight-date.png
+    - assets/icons/cash.png
+    - assets/icons/card.png
+    - assets/icons/no-data.png
+
+
+
 
   # fonts:
   #   - family: Schyler

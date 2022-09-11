@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transportation_app/common_widgets/app_drawer.dart';
+import 'package:transportation_app/common_widgets/drawer.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
 class WrapperHomePage extends StatelessWidget {
@@ -13,9 +13,9 @@ class WrapperHomePage extends StatelessWidget {
     var provider = context.watch<WrapperHomePageProvider>();
     var selectedScreenIndex = provider.selectedScreenIndex; 
     return Scaffold(
+      key: provider.key,
       extendBodyBehindAppBar: true,
       bottomNavigationBar: BottomNavigationBar(
-        // key: ,
         type: BottomNavigationBarType.fixed,
         currentIndex: selectedScreenIndex,
         items: provider.screenLabels,
@@ -25,15 +25,24 @@ class WrapperHomePage extends StatelessWidget {
         //provider.pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.easeIn),
 
       ),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 70,
-        //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
-        title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, ),
-          child: Text(provider.screenLabels[selectedScreenIndex].label!,)
-        ),
-      ),
+      // appBar: AppBar(
+      //   actions: [
+      //     Padding(
+      //       padding: EdgeInsets.symmetric(horizontal: 20.0),
+      //       child: IconButton(
+      //         onPressed: () => provider.key.currentState!.openDrawer(),
+      //         icon: Icon(Icons.menu, size: 30,)
+      //       ),
+      //     )
+      //   ],
+      //   automaticallyImplyLeading: false,
+      //   toolbarHeight: 70,
+      //   //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
+      //   title: Padding(
+      //     padding: EdgeInsets.symmetric(horizontal: 20, ),
+      //     child: Text(provider.screenLabels[selectedScreenIndex].label!,)
+      //   ),
+      // ),
       drawer: AppDrawer(),
       /// Added for orders
       // body: Center(

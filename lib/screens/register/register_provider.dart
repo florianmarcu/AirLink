@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 export 'package:provider/provider.dart';
 
 class RegisterPageProvider with ChangeNotifier{
-   String? email;
+  String? name;
+  String? email;
   String? password;
   bool passwordVisible = false;
   bool isLoading = false;
@@ -11,12 +12,18 @@ class RegisterPageProvider with ChangeNotifier{
   void register(BuildContext context) async{
     _loading();
     
-    var result = await Authentication.registerWithEmailAndPassword(email!, password!);
+    var result = await Authentication.registerWithEmailAndPassword(name!, email!, password!);
     if(result.runtimeType == FirebaseAuthException)
       _handleAuthError(context, result);
     else Navigator.pop(context);
 
     _loading();
+
+    notifyListeners();
+  }
+
+  void setName(String? name){
+    this.name = name;
 
     notifyListeners();
   }

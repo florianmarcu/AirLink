@@ -18,9 +18,9 @@ class AppDrawer extends StatelessWidget {
             ? UserAccountsDrawerHeader(
               accountName: Text(
                 user.displayName, 
-                style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 25)
+                style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 25, color: Theme.of(context).canvasColor)
               ), 
-              accountEmail: Text(user.email != null ? user.email! : ""),
+              accountEmail: Text(user.email != null ? user.email! : "", style: Theme.of(context).textTheme.caption),
               currentAccountPicture: user.photoURL == null
               ? Icon(Icons.person, size: 40, color: Theme.of(context).highlightColor,)
               : ClipRRect(borderRadius: BorderRadius.circular(30), child: Image.network(user.photoURL!)),

@@ -101,11 +101,13 @@ class Authentication{
   }
 
   /// Register with email and password
-  static Future registerWithEmailAndPassword(String email, String password) async{
+  static Future registerWithEmailAndPassword(String name, String email, String password) async{
     try{
       UserCredential result = await auth.createUserWithEmailAndPassword(email: email, password: password);
-      if(result.user != null)
+      if(result.user != null){
+        await auth.currentUser!.updateDisplayName(name);
         updateUserData(result.user!,'email_and_password');
+      }
       return result;
     }
     catch(error){
