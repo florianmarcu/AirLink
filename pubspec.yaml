@@ -17,6 +17,7 @@ dependencies:
   provider:
   location: 
   firebase_core:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:
@@ -47,9 +48,10 @@ flutter:
     - assets/icons/cash.png
     - assets/icons/card.png
     - assets/icons/no-data.png
-
-
-
+    - assets/icons/payment-method.png
+    - assets/icons/company.png
+    - assets/icons/price.png
+    - assets/icons/passenger-data.png
 
   # fonts:
   #   - family: Schyler

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/format.dart';
+import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/date_picker/date_picker_page.dart';
 import 'package:transportation_app/screens/home/home_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
@@ -56,7 +57,7 @@ class HomePage extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        child: DropdownButton(
+                        child: DropdownButton<String>(
                           borderRadius: BorderRadius.circular(30),
                           hint: Text(
                             "De la",
@@ -86,7 +87,7 @@ class HomePage extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        child: DropdownButton(
+                        child: DropdownButton<String>(
                           borderRadius: BorderRadius.circular(30),
                           hint: Text("Până la"),
                           icon: Icon(Icons.arrow_downward),
@@ -155,7 +156,7 @@ class HomePage extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        child: DropdownButton(
+                        child: DropdownButton<Company>(
                           borderRadius: BorderRadius.circular(30),
                           // hint: Text(
                           //   "${provider.selectedTransportationCompany}", 
@@ -167,9 +168,9 @@ class HomePage extends StatelessWidget {
                           iconDisabledColor: Theme.of(context).colorScheme.secondary,
                           isExpanded: true,
                           value: provider.selectedTransportationCompany,
-                          items: provider.transportationCompanies.map((e) => DropdownMenuItem(
+                          items: provider.transportationCompanies.map((e) => DropdownMenuItem<Company>(
                             value: e,
-                            child: Text(e)
+                            child: Text(e.name)
                           )).toList(),
                           onChanged: provider.updateSelectedTransportationCompany
                         ),

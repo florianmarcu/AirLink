@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
-import 'package:transportation_app/screens/ticket/ticket_provider.dart';
+import 'package:transportation_app/screens/trip/trip_provider.dart';
 
 class PassengerDataForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var provider = context.watch<TicketPageProvider>();
+    var provider = context.watch<TripPageProvider>();
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
@@ -21,6 +21,35 @@ class PassengerDataForm extends StatelessWidget {
         toolbarHeight: 70,
         title: Text("Date pasageri"),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: "passenger_data",
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
+        onPressed: () {
+          provider.updatePassengerFormFieldComplete(); 
+          provider.isPassengerFormFieldComplete 
+          ? Navigator.pop(context)
+          : {
+            ScaffoldMessenger.of(context).clearSnackBars(),
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.fixed,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                content: Text("Trebuie să completați datele pasagerilor"),
+              )
+            )
+          };
+        }, 
+        label: Container(
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width*0.4,
+          child: Text(
+            "Finalizează",
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        )
+      ),
       body: ListView(
         shrinkWrap: true,
         children: [
@@ -28,7 +57,7 @@ class PassengerDataForm extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            itemCount: provider.ticket.passengersNo!,
+            itemCount: provider.selectedPassengerNumber,
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemBuilder: (context, index) => Form(
               child: Column(
@@ -42,7 +71,7 @@ class PassengerDataForm extends StatelessWidget {
                           border: Border.all(),
                           shape: BoxShape.circle
                         ),
-                        child: TextFormField( /// Passenger's index
+                        child: TextFormField(
                           keyboardType: TextInputType.name,
                           decoration: InputDecoration(
                             fillColor: Colors.transparent,
@@ -73,20 +102,15 @@ class PassengerDataForm extends StatelessWidget {
                         child: Column(
                           children: [
                             TextFormField(/// Name input
-                              enabled: false,
                               keyboardType: TextInputType.name,
-                              initialValue: provider.ticket.passengerData![index]['name'] != "" ? provider.ticket.passengerData![index]['name'] : null,
+                              initialValue: provider.passengerData[index]['name'] != "" ? provider.passengerData[index]['name'] : null,
                               decoration: InputDecoration(
-                                disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(color: Colors.transparent),
-                                ),                                
                                 fillColor: Colors.transparent,
                                 labelText: "Nume",
                                 labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
                               ),
                               style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                              // onChanged: (name) => provider.updatePassengerName(index, name),
+                              onChanged: (name) => provider.updatePassengerName(index, name),
                             ),
                             Container(
                               height: 1,
@@ -94,20 +118,15 @@ class PassengerDataForm extends StatelessWidget {
                               color: Theme.of(context).primaryColor,
                             ),
                             TextFormField(/// Email input
-                              enabled: false,
                               keyboardType: TextInputType.emailAddress,
-                              initialValue: provider.ticket.passengerData![index]['email'] != "" ? provider.ticket.passengerData![index]['email'] : null,
+                              initialValue: provider.passengerData[index]['email'] != "" ? provider.passengerData[index]['email'] : null,
                               decoration: InputDecoration(
-                                disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(color: Colors.transparent),
-                                ), 
                                 fillColor: Colors.transparent,
                                 labelText: "Email",
                                 labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
                               ),
                               style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                              // onChanged: (email) => provider.updatePassengerEmail(index, email),
+                              onChanged: (email) => provider.updatePassengerEmail(index, email),
                             ),
                             
                           ],
@@ -135,8 +154,8 @@ class PassengerDataForm extends StatelessWidget {
                                   pressElevation: 0,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                   label: Image.asset(localAsset("backpack"), width: 25,), 
-                                  selected: provider.ticket.passengerData![index]['luggage']['backpack'],
-                                  onSelected: (selected) {}
+                                  selected: provider.passengerData[index]['luggage']['backpack'],
+                                  onSelected: (selected) => provider.updatePassengerLuggage(1, index, selected),
                                 ),
                               ),
                               Positioned(
@@ -164,8 +183,8 @@ class PassengerDataForm extends StatelessWidget {
                                   pressElevation: 0,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                   label: Image.asset(localAsset("hand"), width: 25,), 
-                                  selected: provider.ticket.passengerData![index]['luggage']['hand'],
-                                  onSelected: (selected) {}
+                                  selected: provider.passengerData[index]['luggage']['hand'],
+                                  onSelected: (selected) => provider.updatePassengerLuggage(2, index, selected),
                                 ),
                               ),
                               Positioned(
@@ -193,8 +212,8 @@ class PassengerDataForm extends StatelessWidget {
                                   pressElevation: 0,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                   label: Image.asset(localAsset("check-in"), width: 25,), 
-                                  selected: provider.ticket.passengerData![index]['luggage']['check-in'],
-                                  onSelected: (selected) {}
+                                  selected: provider.passengerData[index]['luggage']['check-in'],
+                                  onSelected: (selected) => provider.updatePassengerLuggage(3, index, selected),
                                 ),
                               ),
                               Positioned(

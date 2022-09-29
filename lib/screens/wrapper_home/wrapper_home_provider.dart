@@ -1,4 +1,5 @@
 import 'package:authentication/authentication.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/home/home_page.dart';
@@ -7,10 +8,10 @@ import 'package:transportation_app/screens/payment/payment_page.dart';
 import 'package:transportation_app/screens/payment/payment_provider.dart';
 import 'package:transportation_app/screens/profile/profile_page.dart';
 import 'package:transportation_app/screens/profile/profile_provider.dart';
-import 'package:transportation_app/screens/ticket/ticket_page.dart';
-import 'package:transportation_app/screens/ticket/ticket_provider.dart';
-import 'package:transportation_app/screens/ticket_list/ticket_list_page.dart';
-import 'package:transportation_app/screens/ticket_list/ticket_list_provider.dart';
+import 'package:transportation_app/screens/trip/trip_page.dart';
+import 'package:transportation_app/screens/trip/trip_provider.dart';
+import 'package:transportation_app/screens/trips/trips_page.dart';
+import 'package:transportation_app/screens/trips/trips_provider.dart';
 import 'package:transportation_app/screens/tickets/tickets_page.dart';
 import 'package:transportation_app/screens/tickets/tickets_provider.dart';
 export 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class WrapperHomePageProvider with ChangeNotifier{
   GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
 
   PageController pageController = PageController();
-  TicketPageProvider? ticketPageProvider;
+  TripPageProvider? tripPageProvider;
   PaymentPageProvider? paymentPageProvider;
 
 
@@ -88,21 +89,21 @@ class WrapperHomePageProvider with ChangeNotifier{
             ), 
             MultiProvider( /// Second screen - contains the departures available from the selected data
               providers: [
-                ChangeNotifierProvider<TicketListPageProvider>(create: (_) => TicketListPageProvider()),
+                ChangeNotifierProvider<TripsPageProvider>(create: (_) => TripsPageProvider(homePageProvider)),
                 ChangeNotifierProvider<HomePageProvider>.value(value: homePageProvider)
               ],
-              child: TicketListPage()
+              child: TripsPage()
             ),
-            ChangeNotifierProvider<TicketPageProvider?>( /// Third screen - contains the ticket and passenger form
-              create: (_) => ticketPageProvider,
+            ChangeNotifierProvider<TripPageProvider?>( /// Third screen - contains the ticket and passenger form
+              create: (_) => tripPageProvider,
               builder: (context, _) {
-                return TicketPage();
+                return TripPage();
               }
             ),
             MultiProvider( /// Fourth screen - payment screen
               providers: [
-                ChangeNotifierProvider<TicketPageProvider?>(
-                  create: (_) => ticketPageProvider,
+                ChangeNotifierProvider<TripPageProvider?>(
+                  create: (_) => tripPageProvider,
                 ),
                 ChangeNotifierProvider<PaymentPageProvider?>( 
                   create: (_) => paymentPageProvider,
@@ -133,7 +134,33 @@ class WrapperHomePageProvider with ChangeNotifier{
   }
 
   void updateSelectedScreenIndex(int index){
-    selectedScreenIndex = index;
+    /// If the user is anonymous, do not allow to see the Profile page
+    if(Authentication.auth.currentUser!.isAnonymous && index == 2)
+      showCupertinoDialog(
+        context: context,
+        barrierDismissible: true, 
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          titleTextStyle: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18),
+          title: Center(
+            child: Container(
+              child: Text("Pentru a vizualiza profilul, trebuie să fiți logat.", textAlign: TextAlign.center,),
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            TextButton(
+              child: Text(
+                "Log In"
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                Authentication.signOut();
+              }
+            ),
+          ],
+      ));
+    else selectedScreenIndex = index;
 
     notifyListeners();
   }

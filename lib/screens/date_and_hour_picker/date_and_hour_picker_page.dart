@@ -3,7 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
-import 'package:transportation_app/screens/ticket/ticket_provider.dart';
+import 'package:transportation_app/screens/trip/trip_provider.dart';
 
 class DateAndHourPickerPage extends StatefulWidget {
   @override
@@ -16,10 +16,11 @@ class _DateAndHourPickerPageState extends State<DateAndHourPickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = context.watch<TicketPageProvider>();
+    var provider = context.watch<TripPageProvider>();
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: "picker",
         elevation: 0,
         shape: ContinuousRectangleBorder(),
         onPressed: () => Navigator.pop(context), 

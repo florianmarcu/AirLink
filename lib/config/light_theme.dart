@@ -65,6 +65,14 @@ ColorScheme _colorScheme = ColorScheme(
 );
 
 TextTheme _textTheme = TextTheme(
+  // bodyText1: TextStyle(
+  //   color: _primaryColor,
+  //   fontSize: 15
+  // ),
+  // bodyText2: TextStyle(
+  //   color: _secondaryColor,
+  //   fontSize: 22
+  // ),
   subtitle2: TextStyle(
     color: _canvasColor,
     fontSize: 13*(1/textScaleFactor!)
@@ -246,9 +254,15 @@ BottomNavigationBarThemeData _bottomNavigationBarTheme = BottomNavigationBarThem
   selectedItemColor: _secondaryColor,
   // backgroundColor: Colors.grey[200],
   backgroundColor: _canvasColor,
-  selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+  //selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
   unselectedLabelStyle: TextStyle(color: Colors.black),
   unselectedItemColor: _primaryColor,
+  selectedIconTheme: IconThemeData(
+    size: 30
+  ),
+  unselectedIconTheme: IconThemeData(
+    size: 30
+  ),
 );
 
 AppBarTheme _appBarTheme = AppBarTheme(
@@ -280,3 +294,120 @@ FloatingActionButtonThemeData _floatingActionButtonTheme = FloatingActionButtonT
   focusColor: Colors.black,
   disabledElevation: 0,
 );
+
+
+// "schedule": [
+//         {
+//           "departure_time": "02:30",
+//           "arrival_time": "05:30",
+//         },
+//         {
+//           "departure_time": "03:00",
+//           "arrival_time": "06:00",
+//         },
+//         {
+//           "departure_time": "04:15",
+//           "arrival_time": "07:15",
+//         },
+//         {
+//           "departure_time": "06:30",
+//           "arrival_time": "09:30",
+//         },
+//         {
+//           "departure_time": "08:00",
+//           "arrival_time": "11:00",
+//         },
+//         {
+//           "departure_time": "09:30",
+//           "arrival_time": "12:30",
+//         },
+//         {
+//           "departure_time": "11:00",
+//           "arrival_time": "14:00",
+//         },
+//         {
+//           "departure_time": "12:30",
+//           "arrival_time": "15:30",
+//         },
+//         {
+//           "departure_time": "14:00",
+//           "arrival_time": "17:00",
+//         },
+//         {
+//           "departure_time": "15:00",
+//           "arrival_time": "18:00",
+//         },
+//         {
+//           "departure_time": "16:30",
+//           "arrival_time": "19:30",
+//         },
+//         {
+//           "departure_time": "17:30",
+//           "arrival_time": "20:30",
+//         },
+//         {
+//           "departure_time": "18:30",
+//           "arrival_time": "21:30",
+//         },
+//         {
+//           "departure_time": "20:30",
+//           "arrival_time": "23:30",
+//         },
+//         {
+//           "departure_time": "21:30",
+//           "arrival_time": "00:30",
+//         },
+//         {
+//           "departure_time": "22:30",
+//           "arrival_time": "01:30",
+//         },
+//         {
+//           "departure_time": "23:30",
+//           "arrival_time": "02:30",
+//         },
+//       ]
+
+
+    // Ticket(
+    //   id: "1",
+    //   departureLocationId: "bucharest",
+    //   departureLocationName: "Bucuresti",
+    //   arrivalLocationId: "ai_henri_coanda",
+    //   arrivalLocationName: "Aeroport International Henri Coanda",
+    //   departureTime: DateTime(2022,9,29,10,45),
+    //   arrivalTime: DateTime(2022,9,29,12,00),
+    //   companyId: "1",
+    //   companyName: "Companie 1",
+    //   price: 20,
+    //   passengersNo: 2,
+    //   paymentMethod: PaymentMethod.cash
+    // ),
+    // Ticket(
+    //   id: "2",
+    //   departureLocationId: "bucharest",
+    //   departureLocationName: "Bucuresti",
+    //   arrivalLocationId: "ai_henri_coanda",
+    //   arrivalLocationName: "Aeroport International Henri Coanda",
+    //   departureTime: DateTime(2022,9,30,19,15),
+    //   arrivalTime: DateTime(2022,9,30,20,00),
+    //   companyId: "2",
+    //   companyName: "Companie 2",
+    //   price: 20,
+    //   passengersNo: 1,
+    //   paymentMethod: PaymentMethod.cash
+    // ),
+    // Ticket(
+    //   id: "3",
+    //   departureLocationId: "bucharest",
+    //   departureLocationName: "Bucuresti",
+    //   arrivalLocationId: "ai_henri_coanda",
+    //   arrivalLocationName: "Aeroport International Henri Coanda",
+    //   departureTime: DateTime(2022,9,1,8,0),
+    //   arrivalTime: DateTime(2022,9,1,9,15),
+    //   companyId: "2",
+    //   companyName: "Companie 3",
+    //   price: 30,
+    //   passengersNo: 1,
+    //   paymentMethod: PaymentMethod.cash
+
+    // ),

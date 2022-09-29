@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
-import 'package:transportation_app/screens/ticket_list/ticket_list_provider.dart';
+import 'package:transportation_app/screens/trips/trips_provider.dart';
 
 class FiltersPopUpPage extends StatefulWidget {
 
@@ -20,9 +20,9 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = context.watch<TicketListPageProvider>();
+    var provider = context.watch<TripsPageProvider>();
     //var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
-    var prevSelectedFilters = context.read<TicketListPageProvider>().activeFilters;
+    var prevSelectedFilters = context.read<TripsPageProvider>().activeFilters;
     //_prevFiltersSelected = prevSelectedFilters['types'].fold(false, (prev, curr) => prev || curr) || prevSelectedFilters['ambiences'].fold(false, (prev, curr) => prev || curr) || prevSelectedFilters['costs'].fold(false, (prev, curr) => prev || curr);
     /// If the current filters are not initialized, initialize them with a copy of the previously selected filters
     // if(_currSelectedFilters['types']!.isEmpty || _currSelectedFilters['ambiences']!.isEmpty || _currSelectedFilters['costs']!.isEmpty){
@@ -31,7 +31,8 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
     //   _currSelectedFilters['costs'] = List.from(prevSelectedFilters['costs']);
     //   _currSelectedFilters['sorts'] = List.from(prevSelectedFilters['sorts']);
     // }
-    _currSelectedFilters['sorts'] = List.from(prevSelectedFilters['sorts']);
+    if(_currSelectedFilters['sorts']!.isEmpty)
+      _currSelectedFilters['sorts'] = List.from(prevSelectedFilters['sorts']);
 
     _currFiltersSelected = 
     // _currSelectedFilters['types']!.fold(false, (prev, curr) => prev || curr) 
@@ -39,16 +40,17 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
     // || _currSelectedFilters['costs']!.fold(false, (prev, curr) => prev || curr)
     // || 
     _currSelectedFilters['sorts']!.fold(false, (prev, curr) => prev || curr);
-    //print("$prevSelectedFilters SELECTED FILTERS");
+    print("${_currSelectedFilters['sorts']} SELECTED FILTERS");
     return Scaffold(
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: "filters",
         elevation: 0, 
         shape: ContinuousRectangleBorder(),
         backgroundColor: _currFiltersSelected
-        ? Theme.of(context).primaryColor
-        : Theme.of(context).primaryColor.withOpacity(0.6),
+        ? Theme.of(context).colorScheme.secondary
+        : Theme.of(context).colorScheme.primary.withOpacity(0.6),
         onPressed: _currFiltersSelected 
         ? () {
           provider.filter(
@@ -226,7 +228,7 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
                   pressElevation: 0,
-                  selectedColor: Theme.of(context).primaryColor,
+                  selectedColor: Theme.of(context).colorScheme.secondary,
                   backgroundColor: Theme.of(context).canvasColor,
                   labelStyle: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15),
                   label: Text("durată traseu"),

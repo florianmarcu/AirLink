@@ -93,3 +93,5 @@ class WeirdBottomBorder extends ShapeBorder {
       ..addOval(Rect.fromCircle(center: Offset(rect.left + rect.width, rect.top + rect.height), radius: radius));
   }
 }
+
+var emailTemplate;

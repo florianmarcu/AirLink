@@ -68,7 +68,7 @@ class Authentication{
     }
   }
 
-  // Sign in with Google
+  // Sign in with Facebook
   static Future signInWithFacebook() async{
     try{
       final LoginResult facebookLoginResult = await FacebookAuth.instance.login(

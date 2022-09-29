@@ -17,6 +17,7 @@ class _DatePickerPageState extends State<DatePickerPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: "date_picker",
         elevation: 0,
         shape: ContinuousRectangleBorder(),
         onPressed: () => Navigator.pop(context), 

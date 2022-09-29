@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:transportation_app/screens/ticket/ticket_provider.dart';
+import 'package:transportation_app/screens/trip/trip_provider.dart';
 
 class CupertinoHourPickerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var provider = context.watch<TicketPageProvider>();
+    var provider = context.watch<TripPageProvider>();
     return Container(
       height: 280,
       child: Column(
@@ -18,7 +18,7 @@ class CupertinoHourPickerPage extends StatelessWidget {
               use24hFormat: true,
               mode: CupertinoDatePickerMode.time,
               maximumDate: DateTime.now().toLocal().add(Duration(days: 90)),
-              onDateTimeChanged: provider.updateSelectedDepartureDateAndHour,
+              onDateTimeChanged: provider.updateSelectedDepartureHourIOS,
             ),
           ),
           SizedBox(height: 20,),
