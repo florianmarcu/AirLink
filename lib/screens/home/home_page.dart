@@ -7,212 +7,230 @@ import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.da
 
 /// The page from which the user starts the booking process
 class HomePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var provider = context.watch<HomePageProvider>();
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: IconButton(
-              onPressed: () => wrapperHomePageProvider.key.currentState!.openDrawer(),
-              icon: Icon(Icons.menu, size: 30,)
-            ),
-          )
-        ],
-        automaticallyImplyLeading: false,
-        toolbarHeight: 70,
-        //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
-        title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, ),
-          child: Text(wrapperHomePageProvider.screenLabels[wrapperHomePageProvider.selectedScreenIndex].label!,)
-        ),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(left: 20, right: 20, top: MediaQuery.of(context).padding.top),
-          children: [
-            Container( /// Querying fields
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-              // height: 150,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(30)
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column( /// Select departure destination
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "De la",
-                        style: Theme.of(context).textTheme.subtitle2
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: DropdownButton<String>(
-                          borderRadius: BorderRadius.circular(30),
-                          hint: Text(
-                            "De la",
-                            style: Theme.of(context).textTheme.subtitle1
-                          ),
-                          icon: Icon(Icons.arrow_downward),
-                          dropdownColor: Theme.of(context).primaryColor,
-                          iconEnabledColor: Theme.of(context).colorScheme.secondary,
-                          isExpanded: true,
-                          value: provider.selectedDepartureLocation,
-                          items: provider.departureLocations.map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e)
-                          )).toList(),
-                          onChanged: provider.updateSelectedDepartureLocation,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Column( /// Select arrival destination
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Până la",
-                        style: Theme.of(context).textTheme.subtitle2
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: DropdownButton<String>(
-                          borderRadius: BorderRadius.circular(30),
-                          hint: Text("Până la"),
-                          icon: Icon(Icons.arrow_downward),
-                          dropdownColor: Theme.of(context).primaryColor,
-                          iconEnabledColor: Theme.of(context).colorScheme.secondary,
-                          isExpanded: true,
-                          value: provider.selectedArrivalLocation,
-                          items: provider.arrivalLocations.map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e)
-                          )).toList(),
-                          onChanged: provider.updateSelectedArrivalLocation
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Column(  /// Select date
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Data",
-                        style: Theme.of(context).textTheme.subtitle2
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => ChangeNotifierProvider.value(
-                            value: provider,
-                            child: DatePickerPage(),
-                          )
-                        )),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: DropdownButton<DateTime>(
-                            borderRadius: BorderRadius.circular(30),
-                            hint: Text(
-                              "${formatDateToWeekdayAndDate(provider.selectedDepartureDate)}", 
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                            icon: Icon(Icons.arrow_downward),
-                            dropdownColor: Theme.of(context).primaryColor,
-                            iconEnabledColor: Theme.of(context).colorScheme.secondary,
-                            iconDisabledColor: Theme.of(context).colorScheme.secondary,
-                            isExpanded: true,
-                            value: provider.selectedDepartureDate,
-                            items: [],
-                            onTap: () => Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => ChangeNotifierProvider.value(
-                                value: provider,
-                                child: DatePickerPage(),
-                              )
-                            )),
-                            onChanged: (date) => provider.updateSelectedDepartureDate(date!),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Column( /// Select transportation company
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Companie",
-                        style: Theme.of(context).textTheme.subtitle2
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: DropdownButton<Company>(
-                          borderRadius: BorderRadius.circular(30),
-                          // hint: Text(
-                          //   "${provider.selectedTransportationCompany}", 
-                          //   style: Theme.of(context).textTheme.subtitle1,
-                          // ),
-                          icon: Icon(Icons.arrow_downward),
-                          dropdownColor: Theme.of(context).primaryColor,
-                          iconEnabledColor: Theme.of(context).colorScheme.secondary,
-                          iconDisabledColor: Theme.of(context).colorScheme.secondary,
-                          isExpanded: true,
-                          value: provider.selectedTransportationCompany,
-                          items: provider.transportationCompanies.map((e) => DropdownMenuItem<Company>(
-                            value: e,
-                            child: Text(e.name)
-                          )).toList(),
-                          onChanged: provider.updateSelectedTransportationCompany
-                        ),
-                      ),
-                    ],
-                  ),
-                  
-                ],
-              )
-            ),
-            SizedBox(height: 20,),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 100),
-              width: 100,
-              child: TextButton(
-                // style: Theme.of(context).textButtonTheme.style!.copyWith(
-                //   backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary)
-                // ),
-                onPressed: () {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-                  //   create: (_) => TicketListPageProvider(),
-                  //   child: TicketListPage()
-                  // )));
-                  wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                },
-                // onPressed: () => Navigator.push(context, MaterialPageRoute(
-                //   builder: (context) => MultiProvider(
-                //     providers: [
-                //       ChangeNotifierProvider(create: (_) => TicketListPageProvider()),
-                //       ChangeNotifierProvider.value(value: provider)
-                //     ],
-                //     child: TicketListPage(),
-                //   )
-                // )), 
-                child: Text(
-                  "Caută",
-                )
-              ),
-            ),
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: IconButton(
+                  onPressed: () =>
+                      wrapperHomePageProvider.key.currentState!.openDrawer(),
+                  icon: Icon(
+                    Icons.menu,
+                    size: 30,
+                  )),
+            )
           ],
+          automaticallyImplyLeading: false,
+          toolbarHeight: 70,
+          //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
+          title: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: Text(
+                  wrapperHomePageProvider
+                      .screenLabels[wrapperHomePageProvider.selectedScreenIndex]
+                      .label!,
+                )),
+          ),
         ),
-      )
-    );
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(
+                left: 20, right: 20, top: MediaQuery.of(context).padding.top),
+            children: [
+              Container(
+
+                  /// Querying fields
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  // height: 150,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        /// Select departure destination
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("De la",
+                              style: Theme.of(context).textTheme.subtitle2),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: DropdownButton<String>(
+                              borderRadius: BorderRadius.circular(30),
+                              hint: Text("De la",
+                                  style: Theme.of(context).textTheme.subtitle1),
+                              icon: Icon(Icons.arrow_downward),
+                              dropdownColor: Theme.of(context).primaryColor,
+                              iconEnabledColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              isExpanded: true,
+                              value: provider.selectedDepartureLocation,
+                              items: provider.departureLocations
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e)))
+                                  .toList(),
+                              onChanged:
+                                  provider.updateSelectedDepartureLocation,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Column(
+                        /// Select arrival destination
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Până la",
+                              style: Theme.of(context).textTheme.subtitle2),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: DropdownButton<String>(
+                                borderRadius: BorderRadius.circular(30),
+                                hint: Text("Până la"),
+                                icon: Icon(Icons.arrow_downward),
+                                dropdownColor: Theme.of(context).primaryColor,
+                                iconEnabledColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                isExpanded: true,
+                                value: provider.selectedArrivalLocation,
+                                items: provider.arrivalLocations
+                                    .map((e) => DropdownMenuItem(
+                                        value: e, child: Text(e)))
+                                    .toList(),
+                                onChanged:
+                                    provider.updateSelectedArrivalLocation),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Column(
+                        /// Select date
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Data",
+                              style: Theme.of(context).textTheme.subtitle2),
+                          GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ChangeNotifierProvider.value(
+                                          value: provider,
+                                          child: DatePickerPage(),
+                                        ))),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: DropdownButton<DateTime>(
+                                borderRadius: BorderRadius.circular(30),
+                                hint: Text(
+                                  "${formatDateToWeekdayAndDate(provider.selectedDepartureDate)}",
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                ),
+                                icon: Icon(Icons.arrow_downward),
+                                dropdownColor: Theme.of(context).primaryColor,
+                                iconEnabledColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                iconDisabledColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                isExpanded: true,
+                                value: provider.selectedDepartureDate,
+                                items: [],
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChangeNotifierProvider.value(
+                                              value: provider,
+                                              child: DatePickerPage(),
+                                            ))),
+                                onChanged: (date) =>
+                                    provider.updateSelectedDepartureDate(date!),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Column(
+                        /// Select transportation company
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Companie",
+                              style: Theme.of(context).textTheme.subtitle2),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: DropdownButton<Company>(
+                                borderRadius: BorderRadius.circular(30),
+                                // hint: Text(
+                                //   "${provider.selectedTransportationCompany}",
+                                //   style: Theme.of(context).textTheme.subtitle1,
+                                // ),
+                                icon: Icon(Icons.arrow_downward),
+                                dropdownColor: Theme.of(context).primaryColor,
+                                iconEnabledColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                iconDisabledColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                isExpanded: true,
+                                value: provider.selectedTransportationCompany,
+                                items: provider.transportationCompanies
+                                    .map((e) => DropdownMenuItem<Company>(
+                                        value: e, child: Text(e.name)))
+                                    .toList(),
+                                onChanged: provider
+                                    .updateSelectedTransportationCompany),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 100),
+                width: 100,
+                child: TextButton(
+                    // style: Theme.of(context).textButtonTheme.style!.copyWith(
+                    //   backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary)
+                    // ),
+                    onPressed: () {
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
+                      //   create: (_) => TicketListPageProvider(),
+                      //   child: TicketListPage()
+                      // )));
+                      wrapperHomePageProvider.pageController.nextPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    },
+                    // onPressed: () => Navigator.push(context, MaterialPageRoute(
+                    //   builder: (context) => MultiProvider(
+                    //     providers: [
+                    //       ChangeNotifierProvider(create: (_) => TicketListPageProvider()),
+                    //       ChangeNotifierProvider.value(value: provider)
+                    //     ],
+                    //     child: TicketListPage(),
+                    //   )
+                    // )),
+                    child: Text(
+                      "Caută",
+                    )),
+              ),
+            ],
+          ),
+        ));
   }
 }
