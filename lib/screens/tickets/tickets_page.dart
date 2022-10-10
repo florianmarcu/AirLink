@@ -25,9 +25,17 @@ class TicketsPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         toolbarHeight: 70,
         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
-        title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, ),
-          child: Text(wrapperHomePageProvider.screenLabels[wrapperHomePageProvider.selectedScreenIndex].label!,)
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Text(
+                wrapperHomePageProvider
+                    .screenLabels[wrapperHomePageProvider.selectedScreenIndex]
+                    .label!,
+              )),
         ),
       ),
       body: RefreshIndicator(
