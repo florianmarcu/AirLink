@@ -15,7 +15,7 @@ dependencies:
   authentication: 
     path: ./packages/authentication
   provider:
-  location: 
+  #location: 
   firebase_core:
   cloud_firestore:
 
