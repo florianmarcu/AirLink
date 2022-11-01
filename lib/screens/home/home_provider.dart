@@ -7,7 +7,9 @@ class HomePageProvider with ChangeNotifier{
   var selectedDepartureLocation;
   var selectedArrivalLocation;
   var selectedDepartureDate = DateTime.now().toLocal();
+  var selectedArrivalDate = DateTime.now().add(Duration(days: 7)).toLocal();
   var selectedTransportationCompany;
+  bool roundTrip = false;
   List<String> departureLocations = [
     // "Bucuresti (toate locațiile)",
     // "Bucuresti - Piata Unirii",
@@ -79,9 +81,24 @@ class HomePageProvider with ChangeNotifier{
 
     notifyListeners();
   }
+  void updateSelectedReturnDate(DateTime date){
+    selectedArrivalDate = date;
+
+    notifyListeners();
+  }
   void updateSelectedTransportationCompany(Company? transportationCompany){
     selectedTransportationCompany = transportationCompany!;
 
     notifyListeners();
   }
+  void updateRoundTrip(bool roundTrip){
+    this.roundTrip = roundTrip;
+
+    notifyListeners();
+  }
+}
+
+enum TripType{
+  roundtrip,
+  oneway
 }

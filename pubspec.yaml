@@ -18,6 +18,7 @@ dependencies:
   #location: 
   firebase_core:
   cloud_firestore:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,11 @@ flutter:
     - assets/icons/company.png
     - assets/icons/price.png
     - assets/icons/passenger-data.png
+    - assets/icons/aircraft.png
+    - assets/icons/transport-to-airport.png
+    - assets/icons/browse-options.png
+    - assets/icons/fill-data.png
+    - assets/icons/order-confirmed.png
 
   # fonts:
   #   - family: Schyler

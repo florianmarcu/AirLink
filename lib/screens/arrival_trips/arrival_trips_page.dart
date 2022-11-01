@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
-import 'package:transportation_app/screens/arrival_trips/arrival_trips_page.dart';
-import 'package:transportation_app/screens/arrival_trips/arrival_trips_provider.dart';
 import 'package:transportation_app/screens/home/home_provider.dart';
 import 'package:transportation_app/screens/trip/trip_page.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
-import 'package:transportation_app/screens/trips/trips_provider.dart';
+import 'package:transportation_app/screens/arrival_trips/arrival_trips_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 import 'components/empty_list.dart';
 import 'components/filters_popup.dart';
 
-class TripsPage extends StatefulWidget {
+class ArrivalTripsPage extends StatefulWidget {
   @override
-  State<TripsPage> createState() => _TripsPageState();
+  State<ArrivalTripsPage> createState() => _ArrivalTripsPageState();
 }
 
-class _TripsPageState extends State<TripsPage>{
+class _ArrivalTripsPageState extends State<ArrivalTripsPage>{
 
   @override
   Widget build(BuildContext context) {
     // super.build(context);
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var homeProvider = context.watch<HomePageProvider>();
-    var provider = context.watch<TripsPageProvider>();
+    var provider = context.watch<ArrivalTripsPageProvider>();
     //provider.getData();
     return Scaffold(
       extendBody: true,
@@ -87,8 +85,8 @@ class _TripsPageState extends State<TripsPage>{
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Alege plecarea"),
-            Text("${formatDateToWeekdayAndDate(homeProvider.selectedDepartureDate)}", style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 16 ),)
+            Text("Alege întoarcerea"),
+            Text("${formatDateToWeekdayAndDate(homeProvider.selectedArrivalDate)}", style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 16 ),)
           ],
         ),
       ),
@@ -108,28 +106,17 @@ class _TripsPageState extends State<TripsPage>{
                     return GestureDetector(
                       onTap: (){
                         // wrapperHomePageProvider.tripPageProvider = TripPageProvider(ticket);
-                        // !homeProvider.roundTrip 
+                        // homeProvider.roundTrip 
                         // ? wrapperHomePageProvider.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.easeIn)
                         // : wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                        !homeProvider.roundTrip
-                        ? Navigator.push(context, MaterialPageRoute(
+                        Navigator.push(context, MaterialPageRoute(
                           builder: (context) => MultiProvider(
                             providers: [
-                              ChangeNotifierProvider(create: (context) => TripPageProvider(ticket),),
-                              ChangeNotifierProvider<HomePageProvider>.value(value: homeProvider),
+                              ChangeNotifierProvider(create: (context) => TripPageProvider(provider.departureTicket, returnTicket: ticket),),
+                              ChangeNotifierProvider.value(value: homeProvider),
                               ChangeNotifierProvider.value(value: wrapperHomePageProvider)
                             ],
                             child: TripPage()
-                          )
-                        ))
-                        : Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => MultiProvider(
-                            providers: [
-                              ChangeNotifierProvider(create: (context) => ArrivalTripsPageProvider(homeProvider, ticket),),
-                              ChangeNotifierProvider.value(value: wrapperHomePageProvider),
-                              ChangeNotifierProvider<HomePageProvider>.value(value: homeProvider),
-                            ],
-                            child: ArrivalTripsPage()
                           )
                         ));
                       },
@@ -166,7 +153,7 @@ class _TripsPageState extends State<TripsPage>{
                                           Container( /// Departure location
                                             width: MediaQuery.of(context).size.width*0.3,
                                             child: Text(
-                                              homeProvider.selectedDepartureLocation,
+                                              homeProvider.selectedArrivalLocation,
                                               style: Theme.of(context).textTheme.headline6,
                                             ),
                                           ),
@@ -204,7 +191,7 @@ class _TripsPageState extends State<TripsPage>{
                                           Container( /// Arrival location
                                             width: MediaQuery.of(context).size.width*0.3,
                                             child: Text(
-                                              homeProvider.selectedArrivalLocation,
+                                              homeProvider.selectedDepartureLocation,
                                               style: Theme.of(context).textTheme.headline6,
                                               textAlign: TextAlign.end,
                                             ),
@@ -242,18 +229,18 @@ class _TripsPageState extends State<TripsPage>{
                               width: 15,
                             ),
                           ),
-                            Positioned( /// Right space
-                              right: 0,
-                              top: 85,
-                              child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).canvasColor,
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30))
-                                ),
-                                width: 15,
+                          Positioned( /// Right space
+                            right: 0,
+                            top: 85,
+                            child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).canvasColor,
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30))
                               ),
+                              width: 15,
                             ),
+                          ),
                           ],
                         ),
                       ),

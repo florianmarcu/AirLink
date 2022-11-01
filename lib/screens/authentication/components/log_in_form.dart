@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/screens/authentication/authentication_provider.dart';
+import 'package:transportation_app/screens/forgot_password/forgot_password_page.dart';
+import 'package:transportation_app/screens/forgot_password/forgot_password_provider.dart';
+import 'package:transportation_app/screens/register/register_page.dart';
+import 'package:transportation_app/screens/register/register_provider.dart';
 
 class LogInForm extends StatelessWidget{
   
@@ -33,6 +37,79 @@ class LogInForm extends StatelessWidget{
               ),
             ),
             onChanged: (password) => provider.setPassword(password),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 20
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding( /// Register button
+                  padding: EdgeInsets.only(
+                    // left: 10,
+                    // right: 10
+                  ),
+                  child: Text.rich(TextSpan(
+                    children: [
+                      TextSpan(text: "Nu ai cont?"),
+                      WidgetSpan(child: SizedBox(width: 10)),
+                      WidgetSpan(child: TextButton(
+                        style: Theme.of(context).textButtonTheme.style!.copyWith(
+                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).canvasColor),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          minimumSize: MaterialStateProperty.all<Size>(Size.zero)
+                        ),
+                        child: Text("Înregistrare", style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          fontSize: 15,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).colorScheme.secondary
+                        )),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (context) => RegisterPageProvider(),
+                            child: RegisterPage()
+                          )
+                        )),
+                      ),)
+                    ],
+                  ),),
+                ),
+                Padding( /// Forgot password button
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05),
+                  child: Text.rich(TextSpan(
+                    children: [
+                      // TextSpan(text: "Nu ai cont?"),
+                      // WidgetSpan(child: SizedBox(width: 20)),
+                      WidgetSpan(child: TextButton(
+                        style: Theme.of(context).textButtonTheme.style!.copyWith(
+                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).canvasColor),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          minimumSize: MaterialStateProperty.all<Size>(Size.zero)
+                        ),
+                        child: Text("Am uitat parola", style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          fontSize: 15,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).colorScheme.secondary
+                        )),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (context) => ForgotPasswordPageProvider(),
+                            child: ForgotPasswordPage()
+                          )
+                        )),
+                      ),)
+                    ],
+                  ),),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 30,),
           Row(

@@ -43,7 +43,34 @@ class RegisterForm extends StatelessWidget {
             ),
             onChanged: (password) => provider.setPassword(password),
           ),
-          SizedBox(height: 30,),
+          SizedBox(height: 15,),
+          Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05),
+            child: Text.rich(TextSpan(
+              children: [
+                TextSpan(text: "Ai deja cont?"),
+                WidgetSpan(child: SizedBox(width: 20)),
+                WidgetSpan(child: TextButton(
+                  style: Theme.of(context).textButtonTheme.style!.copyWith(
+                    padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                    backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).canvasColor),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minimumSize: MaterialStateProperty.all<Size>(Size.zero)
+                  ),
+                  child: Text("Log in", style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    fontSize: 15,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.normal,
+                    color:  Theme.of(context).colorScheme.secondary
+                  )),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                ),)
+              ],
+            ),),
+          ),
+          SizedBox(height: 15,),
           TextButton(
             style: Theme.of(context).textButtonTheme.style!.copyWith(
               backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary)              

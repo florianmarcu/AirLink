@@ -1,7 +1,11 @@
 import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transportation_app/common_widgets/loading.dart';
 import 'package:transportation_app/screens/authentication/authentication_page.dart';
 import 'package:transportation_app/screens/authentication/authentication_provider.dart';
+import 'package:transportation_app/screens/onboarding/onboarding_page.dart';
+import 'package:transportation_app/screens/onboarding/onboarding_provider.dart';
 import 'package:transportation_app/screens/wrapper/wrapper_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_page.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
@@ -27,9 +31,37 @@ class Wrapper extends StatelessWidget {
       );
     }
     else if(user == null){
-      return ChangeNotifierProvider(
-        create: (context) => AuthenticationPageProvider(),
-        child: const AuthenticationPage()
+      /// Onboarding Screen
+      return new FutureBuilder<SharedPreferences>(
+        future: SharedPreferences.getInstance(),
+        builder:
+            (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return LoadingPage();
+            default:
+              if (!snapshot.hasError) {
+                return snapshot.data!.getBool("welcome") != null
+                    ? ChangeNotifierProvider(
+                      create: (context) => AuthenticationPageProvider(),
+                      child: AuthenticationPage()
+                    )
+                    : MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(create: (context) => OnboardingPageProvider(),),
+                          ChangeNotifierProvider.value(value: provider)
+                        ],
+                        child: OnboardingPage()
+                    );
+              } else {
+                return ChangeNotifierProvider(
+                  create: (context) => AuthenticationPageProvider(),
+                  child: AuthenticationPage()
+                );
+              }
+          }
+        },
       );
     }
     else return ChangeNotifierProvider(

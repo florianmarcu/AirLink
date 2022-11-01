@@ -1,18 +1,20 @@
 import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:transportation_app/models/models.dart';
+import 'package:transportation_app/screens/trip/trip_provider.dart';
 export 'package:provider/provider.dart';
 
-class TripPageProvider with ChangeNotifier{
+class ArrivalTripPageProvider with ChangeNotifier{
   Ticket ticket;
-  Ticket? returnTicket;
+  Ticket returnTicket;
+  TripPageProvider tripPageProvider;
   
   List<int> passengerNumberList = [1,2,3,4,5,6,7,8];
   List<String> airlineList = ["Tarom", "Wizz Air", "Ryanair", "Blue Air"];
   bool isPassengerFormFieldComplete = false;
   String selectedAirline = "Tarom";
   int selectedPassengerNumber = 1;
-  DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
+  late DateTime selectedDepartureDateAndHour;
 
 
   List passengerData = [
@@ -27,9 +29,12 @@ class TripPageProvider with ChangeNotifier{
     }
   ]; 
 
-  TripPageProvider(this.ticket, {this.returnTicket}){
+  ArrivalTripPageProvider(this.ticket, this.tripPageProvider, {required this.returnTicket}){
+    passengerData = List.from(tripPageProvider.passengerData);
+    selectedPassengerNumber = tripPageProvider.passengerData.length;
     updatePassengerFormFieldComplete();
-    selectedDepartureDateAndHour = ticket.arrivalTime;
+    selectedDepartureDateAndHour = returnTicket.arrivalTime;
+    selectedDepartureDateAndHour = returnTicket.departureTime;
   }
 
   void updateSelectedDepartureDateAndHour(DateTime date){
@@ -111,9 +116,15 @@ class TripPageProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  void updatePassengerPhoneNumber(int index, String phoneNumber){
+    passengerData[index]['phone_number'] = phoneNumber;
+
+    notifyListeners();
+  }
+
   void updatePassengerLuggage(int luggage, int index, bool selected){
     switch(luggage){
-      case 1: passengerData[index]['luggage']['backpack'] = selected;
+      case 1: passengerData[index]['luggage']['backpack-'] = selected;
       break;
       case 2: passengerData[index]['luggage']['hand'] = selected;
       break;
@@ -126,7 +137,7 @@ class TripPageProvider with ChangeNotifier{
   void updateSelectedPassengerNumber(value){
     selectedPassengerNumber = value;
 
-    ticket.passengersNo = value;
+    returnTicket.passengersNo = value;
 
     updatePassengerDataLength(value);
 
@@ -137,5 +148,11 @@ class TripPageProvider with ChangeNotifier{
     selectedAirline = value;
 
     notifyListeners();
+  }
+
+  ///TODO
+  String validatePassengerPhoneNumber(String? phoneNumber){
+    // if(phoneNumber == "" || phoneNumber.contains(other));
+    return "";
   }
 }

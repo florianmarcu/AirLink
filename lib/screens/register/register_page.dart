@@ -34,45 +34,46 @@ class RegisterPage extends StatelessWidget {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              //mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("Înregistrare", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
+                Text("Înregistrare", style: Theme.of(context).textTheme.headline2!.copyWith(color: Theme.of(context).primaryColor),),
                 SizedBox(height: 20),
                 RegisterForm(),
                 SizedBox(height: 25),
-                Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05),
-                  child: Text.rich(TextSpan(
-                    children: [
-                      TextSpan(text: "Ai deja cont?"),
-                      WidgetSpan(child: SizedBox(width: 20)),
-                      WidgetSpan(child: TextButton(
-                        style: Theme.of(context).textButtonTheme.style!.copyWith(
-                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).canvasColor),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          minimumSize: MaterialStateProperty.all<Size>(Size.zero)
-                        ),
-                        child: Text("Log in", style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          fontSize: 15,
-                          decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.normal,
-                          color:  Theme.of(context).colorScheme.secondary
-                        )),
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                      ),)
-                    ],
-                  ),),
-                )
+                // Padding(
+                //   padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05),
+                //   child: Text.rich(TextSpan(
+                //     children: [
+                //       TextSpan(text: "Ai deja cont?"),
+                //       WidgetSpan(child: SizedBox(width: 20)),
+                //       WidgetSpan(child: TextButton(
+                //         style: Theme.of(context).textButtonTheme.style!.copyWith(
+                //           padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+                //           backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).canvasColor),
+                //           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                //           minimumSize: MaterialStateProperty.all<Size>(Size.zero)
+                //         ),
+                //         child: Text("Log in", style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                //           fontSize: 15,
+                //           decoration: TextDecoration.underline,
+                //           fontWeight: FontWeight.normal,
+                //           color:  Theme.of(context).colorScheme.secondary
+                //         )),
+                //         onPressed: (){
+                //           Navigator.pop(context);
+                //         },
+                //       ),)
+                //     ],
+                //   ),),
+                // )
+                SizedBox(height: 20)
               ],
             ),
           ),
           /// The circle in the down left corner
           Positioned(
-            bottom: -150,
-            left: 0,
+            top: -150,
+            right: 0,
             child: new Container(
               width: 400.0,
               height: 270.0,
@@ -84,8 +85,8 @@ class RegisterPage extends StatelessWidget {
           ),
           /// The circle in the down left corner
           Positioned(
-            bottom: -200,
-            left: -200,
+            top: -200,
+            right: -200,
             child: new Container(
               width: 400.0,
               height: 400.0,
@@ -100,7 +101,7 @@ class RegisterPage extends StatelessWidget {
             child: Container(
               height: 5,
               width: MediaQuery.of(context).size.width,
-              child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), backgroundColor: Colors.transparent,)
+              child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.secondary), backgroundColor: Colors.transparent,)
             ), 
             bottom: MediaQuery.of(context).padding.bottom,
           )

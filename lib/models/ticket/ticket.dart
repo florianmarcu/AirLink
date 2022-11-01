@@ -23,6 +23,7 @@ class Ticket{
   List<dynamic>? passengerData = [];
   DocumentReference? userTicketRef;
   DocumentReference? companyTicketRef;
+  double roundTripPriceDiscount;
 
   Ticket({
     this.id,
@@ -45,6 +46,7 @@ class Ticket{
     this.passengerData,
     this.userTicketRef,
     this.companyTicketRef,
+    required this.roundTripPriceDiscount
   });
 
 }
@@ -77,7 +79,8 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     passengerData: data['passenger_data'],
     userTicketRef: data['user_ticket_ref'],
     companyTicketRef: data['company_ticket_ref'],
-    airCompanyName: data['air_company_name']
+    airCompanyName: data['air_company_name'],
+    roundTripPriceDiscount: data['round_trip_price_discount'] == null ? 0 : data['round_trip_price_discount'].toDouble()
   );
 }
 

@@ -2,24 +2,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:transportation_app/config/config.dart';
-import 'package:transportation_app/screens/arrival_trip/arrival_trip_page.dart';
 import 'package:transportation_app/screens/arrival_trip/arrival_trip_provider.dart';
 import 'package:transportation_app/screens/cupertino_date_picker/cupertino_date_picker_page.dart';
 import 'package:transportation_app/screens/cupertino_hour_picker/cupertino_hour_picker_page.dart';
 import 'package:transportation_app/screens/date_and_hour_picker/date_and_hour_picker_page.dart';
-import 'package:transportation_app/screens/home/home_provider.dart';
 import 'package:transportation_app/screens/payment/payment_page.dart';
 import 'package:transportation_app/screens/payment/payment_provider.dart';
-import 'package:transportation_app/screens/trip/components/passenger_data_form.dart';
+import 'package:transportation_app/screens/arrival_trip/components/passenger_data_form.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
-class TripPage extends StatefulWidget {
+class ArrivalTripPage extends StatefulWidget {
   @override
-  State<TripPage> createState() => _TripPageState();
+  State<ArrivalTripPage> createState() => _ArrivalTripPageState();
 }
 
-class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
+class _ArrivalTripPageState extends State<ArrivalTripPage> with AutomaticKeepAliveClientMixin{
 
   @override
   bool get wantKeepAlive => true;
@@ -28,9 +26,9 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
   Widget build(BuildContext context) {
     super.build(context);
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
-    var provider = context.watch<TripPageProvider?>();
-    var homeProvider = context.watch<HomePageProvider>();
-    var ticket = provider!.ticket;
+    var provider = context.watch<ArrivalTripPageProvider?>();
+    var tripPageProvider = context.watch<TripPageProvider>();
+    var ticket = provider!.returnTicket;
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
@@ -56,11 +54,7 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
         //   ],
         // )
         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
-        title: Text(
-          !homeProvider.roundTrip
-          ? "Detalii călătorie"
-          : "Detalii călătorie dus"
-        ),
+        title: Text("Detalii călătorie întors"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
@@ -70,24 +64,16 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
         onPressed: (){
           if(provider.isPassengerFormFieldComplete) {
-            !homeProvider.roundTrip
-            ? Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
               providers: [
                 ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
                 ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+                ChangeNotifierProvider.value(value: tripPageProvider,),
                 ChangeNotifierProvider.value(value: provider)
               ],
-              child: PaymentPage(),
-            ),))
-            : Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (_) => ArrivalTripPageProvider(ticket, provider, returnTicket: provider.returnTicket!)),
-                ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
-                ChangeNotifierProvider.value(value: homeProvider),
-                ChangeNotifierProvider.value(value: provider)
-              ],
-              child: ArrivalTripPage(),
-            ),));
+                child: PaymentPage(),
+              ),
+            ));
           }
           else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -98,8 +84,8 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
               ])))
             );
           }
-          // wrapperHomePageProvider.paymentPageProvider = PaymentPageProvider();
-          // wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            // wrapperHomePageProvider.paymentPageProvider = PaymentPageProvider();
+            // wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
         }, 
         label: Container(
           alignment: Alignment.center,

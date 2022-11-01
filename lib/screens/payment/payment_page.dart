@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
+import 'package:transportation_app/screens/arrival_trip/arrival_trip_provider.dart';
+import 'package:transportation_app/screens/payment/components/trip_details.dart';
 import 'package:transportation_app/screens/payment/payment_provider.dart';
 import 'package:transportation_app/screens/ticket/ticket_page.dart';
 import 'package:transportation_app/screens/ticket/ticket_provider.dart';
@@ -23,15 +25,23 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
     var provider = context.watch<PaymentPageProvider>();
     var tripPageProvider = context.watch<TripPageProvider>();
     var ticket = tripPageProvider.ticket;
+    var returnTicket;
+    ArrivalTripPageProvider? arrivalTripPageProvider;
+    if(tripPageProvider.returnTicket != null) {
+      arrivalTripPageProvider = context.watch<ArrivalTripPageProvider>();
+      returnTicket = arrivalTripPageProvider.returnTicket;
+    }
+    print(tripPageProvider.passengerData.length);
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
         leading: IconButton(
           padding: EdgeInsets.zero,
           onPressed: () {
-            wrapperHomePageProvider.rebuildTicketPageProvider();
-            //wrapperHomePageProvider.ticketPageProvider = TicketPageProvider(ticketPageProvider.ticket);
-            wrapperHomePageProvider.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            Navigator.pop(context);
+            // wrapperHomePageProvider.rebuildTicketPageProvider();
+            // //wrapperHomePageProvider.ticketPageProvider = TicketPageProvider(ticketPageProvider.ticket);
+            // wrapperHomePageProvider.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
           },
           icon: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -50,9 +60,10 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
         backgroundColor: Theme.of(context).colorScheme.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
         onPressed: (){
-          provider.makeReservation(ticket, tripPageProvider)
+          provider.makeReservation(ticket, returnTicket, tripPageProvider, arrivalTripPageProvider)
           .then((newTicket){
-            wrapperHomePageProvider.pageController.jumpToPage(0);
+            Navigator.popUntil(context, (route) => route.isFirst);
+            // wrapperHomePageProvider.pageController.jumpToPage(0);
             wrapperHomePageProvider.updateSelectedScreenIndex(1);
             Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
               create: (_) => TicketPageProvider(newTicket),
@@ -87,96 +98,50 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
             shrinkWrap: true,
             children: [
               SizedBox(height: 20,),
-              Padding( /// Departure date
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Data plecării", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    Text("${formatDateToWeekdayAndDate(ticket.departureTime)}", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
-                  ],
-                ),
-              ),
-              SizedBox(height: 20,),
-              Padding( /// Departure time
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Ora plecării", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    Text("${formatDateToHourAndMinutes(ticket.departureTime)}", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
-                  ],
-                ),
-              ),
-              SizedBox(height: 20,),
-              Padding( /// Arrival time
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Ora sosirii", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    Text("${formatDateToHourAndMinutes(ticket.arrivalTime)}", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
-                  ],
-                ),
-              ),
-              SizedBox(height: 20,),
-              Padding( /// Passenger no
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Număr pasageri", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    Text.rich(TextSpan( 
-                      children: [
-                        TextSpan(
-                          text:"${tripPageProvider.selectedPassengerNumber}", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)
-                        ),
-                        WidgetSpan(child: SizedBox(width: 10,)),
-                        WidgetSpan(
-                          child: Icon(Icons.person, size: 17)
-                        )
-                      ],
-                    )),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20,),
-              Padding( /// Ticket price
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Tarif", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    tripPageProvider.selectedPassengerNumber > 1
-                    ? Text("${tripPageProvider.selectedPassengerNumber} x ${removeDecimalZeroFormat(ticket.price)} = ${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber)} RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
-                    : Text("${removeDecimalZeroFormat(ticket.price)} RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
-                  ],
-                ),
-              ),
-              SizedBox(height: 15,),
-              Padding( /// Other costs
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Alte costuri", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    Text("0 RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
-                  ],
-                ),
-              ),
+              returnTicket != null
+              ? Text("Drum plecare", style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 18),)
+              : Container(),
+
+              TripDetails(ticket, tripPageProvider.selectedPassengerNumber, tripPageProvider.passengerData),
+              
+              SizedBox( height: 20,),
+              returnTicket != null
+              ? Text("Drum întoarcere", style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 18),)
+              : Container(),
+              returnTicket != null
+              ? TripDetails(returnTicket, arrivalTripPageProvider!.selectedPassengerNumber, arrivalTripPageProvider.passengerData)
+              : Container(),
               SizedBox(height: 15,),
               Row( /// Row of lines
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(MediaQuery.of(context).size.width ~/ 10, (index) => Text("-", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)))
               ),
               SizedBox(height: 15,),
-              Padding( /// Other costs
+              returnTicket != null && ticket.roundTripPriceDiscount != 0
+              ? Padding( /// Price discount
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Reducere traseu dus-întors", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
+                    Text("-${removeDecimalZeroFormat(ticket.roundTripPriceDiscount)} RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15),)
+                  ],
+                ),
+              )
+              : Container(),
+              SizedBox(height: 15,),
+              Padding( /// Total price
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Total", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                    Text("${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber)} RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15),)
+                    Text(
+                      returnTicket != null
+                      ? "${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber + returnTicket.price*arrivalTripPageProvider!.selectedPassengerNumber - ticket.roundTripPriceDiscount)} RON"
+                      : "${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber)} RON", 
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15),
+                    )
                   ],
                 ),
               ),
@@ -203,7 +168,8 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
                     ),
                   ),
                 ),
-              )
+              ),
+              SizedBox(height: 100,)
             ],
           ),
           provider.isLoading

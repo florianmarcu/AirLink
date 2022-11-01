@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/models/models.dart';
@@ -36,6 +37,17 @@ String formatPaymentMethod(PaymentMethod paymentMethod){
     case PaymentMethod.card: return "Card";
     default: return "Numerar";
   }
+}
+
+formatLuggage(BuildContext context, Map luggage, Color color){
+  List<Widget> result = [];
+  if(luggage['backpack'])
+    result.add(Image.asset(localAsset("backpack"), width: 18, color: color));
+  if(luggage['hand'])
+    result.add(Image.asset(localAsset("hand"), width: 18, color: color));
+  if(luggage['check-in'])
+    result.add(Image.asset(localAsset("check-in"), width: 18, color: color));
+  return Row(children: result);
 }
 
 String formatPassengerDataToLuggage(List passengerData){

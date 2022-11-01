@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/home/home_page.dart';
 import 'package:transportation_app/screens/home/home_provider.dart';
-import 'package:transportation_app/screens/payment/payment_page.dart';
 import 'package:transportation_app/screens/payment/payment_provider.dart';
 import 'package:transportation_app/screens/profile/profile_page.dart';
 import 'package:transportation_app/screens/profile/profile_provider.dart';
-import 'package:transportation_app/screens/trip/trip_page.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
-import 'package:transportation_app/screens/trips/trips_page.dart';
-import 'package:transportation_app/screens/trips/trips_provider.dart';
 import 'package:transportation_app/screens/tickets/tickets_page.dart';
 import 'package:transportation_app/screens/tickets/tickets_provider.dart';
 export 'package:provider/provider.dart';
@@ -67,53 +63,66 @@ class WrapperHomePageProvider with ChangeNotifier{
 
     
     screens = <Widget>[
-      WillPopScope(
-        onWillPop: () async{
-          if(pageController.page == pageController.initialPage)  
-            return true;
-          else {
-            rebuildTicketPageProvider();
-            pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-            return false;
-          }
-        },
-        child: PageView( /// Page View that contains all the screens from ticket buying user flow
-          physics: NeverScrollableScrollPhysics(),
-          controller: pageController,
-          children: [
-            ChangeNotifierProvider<HomePageProvider>.value(  /// First screen - contains departure, arrival and date searching criteria
-              value: homePageProvider,
-              builder: (context, _) {
-                return HomePage();
-              }
-            ), 
-            MultiProvider( /// Second screen - contains the departures available from the selected data
-              providers: [
-                ChangeNotifierProvider<TripsPageProvider>(create: (_) => TripsPageProvider(homePageProvider)),
-                ChangeNotifierProvider<HomePageProvider>.value(value: homePageProvider)
-              ],
-              child: TripsPage()
-            ),
-            ChangeNotifierProvider<TripPageProvider?>( /// Third screen - contains the ticket and passenger form
-              create: (_) => tripPageProvider,
-              builder: (context, _) {
-                return TripPage();
-              }
-            ),
-            MultiProvider( /// Fourth screen - payment screen
-              providers: [
-                ChangeNotifierProvider<TripPageProvider?>(
-                  create: (_) => tripPageProvider,
-                ),
-                ChangeNotifierProvider<PaymentPageProvider?>( 
-                  create: (_) => paymentPageProvider,
-                ),
-              ],
-              child: PaymentPage(),
-            ),
-          ],
-        ),
-      ),
+      ChangeNotifierProvider<HomePageProvider>.value(  /// First screen - contains departure, arrival and date searching criteria
+        value: homePageProvider,
+        builder: (context, _) {
+          return HomePage();
+        }
+      ), 
+      // WillPopScope(
+      //   onWillPop: () async{
+      //     if(pageController.page == pageController.initialPage)  
+      //       return true;
+      //     else {
+      //       rebuildTicketPageProvider();
+      //       pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      //       return false;
+      //     }
+      //   },
+      //   child: PageView( /// Page View that contains all the screens from ticket buying user flow
+      //     physics: NeverScrollableScrollPhysics(),
+      //     controller: pageController,
+      //     children: [
+      //       ChangeNotifierProvider<HomePageProvider>.value(  /// First screen - contains departure, arrival and date searching criteria
+      //         value: homePageProvider,
+      //         builder: (context, _) {
+      //           return HomePage();
+      //         }
+      //       ), 
+      //       MultiProvider( /// Second screen - contains the departures available from the selected data
+      //         providers: [
+      //           ChangeNotifierProvider<TripsPageProvider>(create: (_) => TripsPageProvider(homePageProvider)),
+      //           ChangeNotifierProvider<HomePageProvider>.value(value: homePageProvider)
+      //         ],
+      //         child: TripsPage()
+      //       ),
+      //       MultiProvider( /// (AVAILABLE ONLY FOR ROUNDTRIPS) Second screen - contains the arrivals available from the selected data
+      //         providers: [
+      //           ChangeNotifierProvider<ArrivalTripsPageProvider>(create: (_) => ArrivalTripsPageProvider(homePageProvider)),
+      //           ChangeNotifierProvider<HomePageProvider>.value(value: homePageProvider)
+      //         ],
+      //         child: ArrivalTripsPage()
+      //       ),
+      //       ChangeNotifierProvider<TripPageProvider?>( /// Third screen - contains the ticket and passenger form
+      //         create: (_) => tripPageProvider,
+      //         builder: (context, _) {
+      //           return TripPage();
+      //         }
+      //       ),
+      //       MultiProvider( /// Fourth screen - payment screen
+      //         providers: [
+      //           ChangeNotifierProvider<TripPageProvider?>(
+      //             create: (_) => tripPageProvider,
+      //           ),
+      //           ChangeNotifierProvider<PaymentPageProvider?>( 
+      //             create: (_) => paymentPageProvider,
+      //           ),
+      //         ],
+      //         child: PaymentPage(),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       ChangeNotifierProvider<TicketsPageProvider>(
         create: (context) => TicketsPageProvider(),
         builder: (context, _) {
