@@ -17,15 +17,36 @@ exports.sendEmailTicketConfirmationToUser = functions.firestore
         const emails = [];
         data['passenger_data'].forEach(element => {
             const email = element['email'];
-            const departureTime = data['departure_time'].toDate()
-            const arrivalTime = data['arrival_time'].toDate()
+            var departureTime = data['departure_time'].toDate()
+            var arrivalTime = data['arrival_time'].toDate()
             /// const duration = Math.abs(departureTime - arrivalTime);
             var date_diff_indays = function(date1, date2) {
                 dt1 = new Date(date1);
                 dt2 = new Date(date2);
                 return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60));
             };
-            var duration = date_diff_indays(departureTime, arrivalTime);
+            var date_diff_inminutes =  function(startDate, endDate) {
+                const msInMinute = 60 * 1000;
+                const duration = Math.round(
+                    Math.abs(endDate - startDate) / msInMinute
+                );
+                var res = "";
+                if(duration / 60 > 1){
+                    const hour = duration / 60;
+                    res += hour.toString();
+                    res += " ore ";
+                    const mins = duration - (hour*60);
+                    res += mins.toString();
+                    res += " minute";
+                }
+                else {
+                    const mins = duration - (hour*60);
+                    res += mins.toString();
+                    res += " minute";
+                }
+                return res;
+            };
+            var duration = date_diff_inminutes(departureTime, arrivalTime);
             var arrivalHoursAndMinutes = "";
             var departureHoursAndMinutes = "";
             var formatLuggage = function(passengerData) {
@@ -52,6 +73,12 @@ exports.sendEmailTicketConfirmationToUser = functions.firestore
             };
             var departureDate = shortDate(data['departure_time'].toDate());
             var arrivalDate = shortDate(data['arrival_time'].toDate());
+            /// Format timezone 
+            var dateToLocale = function (date, tzString) {
+                return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+            }
+            departureTime = dateToLocale(departureTime, "Europe/Bucharest");
+            arrivalTime = dateToLocale(arrivalTime, "Europe/Bucharest");
             /// Format departure time
             if(departureTime.getHours()<10)
                 departureHoursAndMinutes += "0" + (departureTime.getHours()).toString()
@@ -78,6 +105,7 @@ exports.sendEmailTicketConfirmationToUser = functions.firestore
                     ticket: {
                         id: data['id'],
                         passengerName: element['name'],
+                        phoneNumber: data['phone_number'],
                         companyName: data['company_name'],
                         company: data['company_name'],
                         companyAddress: data['company_address'],

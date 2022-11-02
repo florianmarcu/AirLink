@@ -372,7 +372,7 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
                           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(
                             value: provider,
                             child: PassengerDataForm(),
-                          ))),
+                          ))).then((value) => provider.updatePassengerFormFieldComplete()),
                           child: Text("Completează datele", style: Theme.of(context).textTheme.caption!.copyWith(
                             decoration: TextDecoration.underline,
                             fontWeight: FontWeight.normal,

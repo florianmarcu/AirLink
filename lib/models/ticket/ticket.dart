@@ -63,7 +63,7 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
   : DateTime(departureDate.add(Duration(days: 1)).year, departureDate.add(Duration(days: 1)).month, departureDate.add(Duration(days: 1)).day, int.parse(arrivalTime.substring(0,2)), int.parse(arrivalTime.substring(3,5)));
   var id = generateId();
   return Ticket(
-    id: id,
+    id: data['id'] != null ? data['id'] : id,
     departureLocationName: data['departure_location_name'],
     departureLocationAddress: data['departure_location_address'],
     arrivalLocationName: data['arrival_location_name'],

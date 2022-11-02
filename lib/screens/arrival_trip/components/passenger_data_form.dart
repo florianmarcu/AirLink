@@ -143,7 +143,7 @@ class PassengerDataForm extends StatelessWidget {
                                 labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
                               ),
                               style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                              onChanged: (email) => provider.updatePassengerEmail(index, email),
+                              onChanged: (phoneNumber) => provider.updatePassengerPhoneNumber(index, phoneNumber),
                             ),
                           ],
                         ),

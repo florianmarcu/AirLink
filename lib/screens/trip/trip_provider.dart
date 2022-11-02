@@ -8,17 +8,19 @@ class TripPageProvider with ChangeNotifier{
   Ticket? returnTicket;
   
   List<int> passengerNumberList = [1,2,3,4,5,6,7,8];
-  List<String> airlineList = ["Tarom", "Wizz Air", "Ryanair", "Blue Air"];
+  List<String> airlineList = ["Tarom", "Wizz Air", "Ryanair", "Blue Air", ""];
   bool isPassengerFormFieldComplete = false;
   String selectedAirline = "Tarom";
   int selectedPassengerNumber = 1;
   DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
+  GlobalKey<FormFieldState> phoneNumberFormKey = GlobalKey<FormFieldState>();
 
 
   List passengerData = [
     {
       "name" : Authentication.auth.currentUser!.displayName,
       "email" : Authentication.auth.currentUser!.email,
+      "phone_number" : Authentication.auth.currentUser!.phoneNumber == null || Authentication.auth.currentUser!.phoneNumber == "" ? "" : Authentication.auth.currentUser!.phoneNumber,
       "luggage" : {
         "backpack" : true,
         "hand" : false,
@@ -72,8 +74,12 @@ class TripPageProvider with ChangeNotifier{
   }
 
   void updatePassengerFormFieldComplete(){
-    isPassengerFormFieldComplete = passengerData.fold(true, (previousValue, element) => previousValue && (element['name'] != "" && element['email'] != ""));
-
+    isPassengerFormFieldComplete = passengerData.fold(true, (previousValue, element) => previousValue && (element['name'] != "" && element['email'] != "" && element['phone_number'] != ""));
+    if(passengerData[0]['phone_number'] != "") {
+      bool isValid = phoneNumberFormKey.currentState!.validate();
+      if(!isValid)
+        isPassengerFormFieldComplete = false;
+    }
     notifyListeners();
   }
 
@@ -110,6 +116,12 @@ class TripPageProvider with ChangeNotifier{
 
     notifyListeners();
   }
+  
+  void updatePassengerPhoneNumber(int index, String phoneNumber){
+    passengerData[index]['phone_number'] = phoneNumber;
+
+    notifyListeners();
+  }
 
   void updatePassengerLuggage(int luggage, int index, bool selected){
     switch(luggage){
@@ -137,5 +149,18 @@ class TripPageProvider with ChangeNotifier{
     selectedAirline = value;
 
     notifyListeners();
+  }
+  ///TODO
+  String? validatePassengerPhoneNumber(String? phoneNumber){
+    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp regExp = RegExp(pattern);
+    if (phoneNumber != null)
+      if(
+        (phoneNumber.startsWith("0") && phoneNumber.length != 10) || 
+        (phoneNumber.startsWith("+") && phoneNumber.length != 12) ||
+        (!regExp.hasMatch(phoneNumber))
+      )
+      return "Numărul introdus este invalid";
+    return null;
   }
 }

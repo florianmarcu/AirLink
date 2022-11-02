@@ -45,12 +45,12 @@ class TicketsPage extends StatelessWidget {
         child: Stack(
           children: [
             ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
                 itemCount: provider.tickets == null ? 1 : provider.tickets!.length,
                 separatorBuilder: (context, index) => SizedBox(height: 15,),
                 itemBuilder: (context, index){
                   var tickets = provider.tickets;
-                  if(tickets == null){
+                  if(tickets == null || tickets.length == 0){
                     return EmptyList();
                   }
                   else {

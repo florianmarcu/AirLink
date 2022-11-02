@@ -128,7 +128,38 @@ class PassengerDataForm extends StatelessWidget {
                               style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
                               onChanged: (email) => provider.updatePassengerEmail(index, email),
                             ),
-                            
+                            index == 0
+                            ? Column(
+                              children: [
+                                Container(
+                                  height: 1,
+                                  width: MediaQuery.of(context).size.width*0.7,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                TextFormField(/// Phone number input
+                                  key: provider.phoneNumberFormKey,
+                                  keyboardType: TextInputType.phone,
+                                  validator: provider.validatePassengerPhoneNumber,
+                                  initialValue: provider.passengerData[index]['phone_number'] != "" ? provider.passengerData[index]['phone_number'] : null,
+                                  decoration: InputDecoration(
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide(color: Colors.transparent),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide(color: Colors.transparent),
+                                    ),                
+                                    fillColor: Colors.transparent,
+                                    labelText: "Telefon",
+                                    labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
+                                  ),
+                                  style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
+                                  onChanged: (phoneNumber) => provider.updatePassengerPhoneNumber(index, phoneNumber),
+                                ),
+                              ],
+                            )
+                            : Container()
                           ],
                         ),
                       ),
