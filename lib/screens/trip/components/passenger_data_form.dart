@@ -23,6 +23,7 @@ class PassengerDataForm extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 0,
         heroTag: "passenger_data",
         backgroundColor: Theme.of(context).colorScheme.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
@@ -128,38 +129,32 @@ class PassengerDataForm extends StatelessWidget {
                               style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
                               onChanged: (email) => provider.updatePassengerEmail(index, email),
                             ),
-                            index == 0
-                            ? Column(
-                              children: [
-                                Container(
-                                  height: 1,
-                                  width: MediaQuery.of(context).size.width*0.7,
-                                  color: Theme.of(context).primaryColor,
+                            Container(
+                              height: 1,
+                              width: MediaQuery.of(context).size.width*0.7,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            TextFormField(/// Phone number input
+                              key: provider.phoneNumberFormKeys[index],
+                              keyboardType: TextInputType.phone,
+                              validator: provider.validatePassengerPhoneNumber,
+                              initialValue: provider.passengerData[index]['phone_number'] != "" ? provider.passengerData[index]['phone_number'] : null,
+                              decoration: InputDecoration(
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: Colors.transparent),
                                 ),
-                                TextFormField(/// Phone number input
-                                  key: provider.phoneNumberFormKey,
-                                  keyboardType: TextInputType.phone,
-                                  validator: provider.validatePassengerPhoneNumber,
-                                  initialValue: provider.passengerData[index]['phone_number'] != "" ? provider.passengerData[index]['phone_number'] : null,
-                                  decoration: InputDecoration(
-                                    errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: BorderSide(color: Colors.transparent),
-                                    ),                
-                                    fillColor: Colors.transparent,
-                                    labelText: "Telefon",
-                                    labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
-                                  ),
-                                  style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                                  onChanged: (phoneNumber) => provider.updatePassengerPhoneNumber(index, phoneNumber),
-                                ),
-                              ],
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: Colors.transparent),
+                                ),                
+                                fillColor: Colors.transparent,
+                                labelText: "Telefon",
+                                labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
+                              ),
+                              style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
+                              onChanged: (phoneNumber) => provider.updatePassengerPhoneNumber(index, phoneNumber),
                             )
-                            : Container()
                           ],
                         ),
                       ),

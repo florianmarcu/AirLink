@@ -1,6 +1,7 @@
 import 'package:authentication/authentication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/home/home_page.dart';
 import 'package:transportation_app/screens/home/home_provider.dart';
@@ -32,7 +33,14 @@ class WrapperHomePageProvider with ChangeNotifier{
     ),
     BottomNavigationBarItem(
       label: "Bilete",
-      icon: Icon(Icons.history)
+      icon: Padding(
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: Image.asset(localAsset("ticket"),width: 25, color: Color(0xFF222831),)
+      ),
+      activeIcon: Padding(
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: Image.asset(localAsset("ticket"),width: 25, color: Color(0xFFD65A31))
+      )
     ),
     BottomNavigationBarItem(
       label: "Profil",

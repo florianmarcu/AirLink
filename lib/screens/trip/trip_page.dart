@@ -70,24 +70,55 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
         onPressed: (){
           if(provider.isPassengerFormFieldComplete) {
-            !homeProvider.roundTrip
-            ? Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
-                ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
-                ChangeNotifierProvider.value(value: provider)
-              ],
-              child: PaymentPage(),
-            ),))
-            : Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (_) => ArrivalTripPageProvider(ticket, provider, returnTicket: provider.returnTicket!)),
-                ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
-                ChangeNotifierProvider.value(value: homeProvider),
-                ChangeNotifierProvider.value(value: provider)
-              ],
-              child: ArrivalTripPage(),
-            ),));
+            Navigator.push(context, PageRouteBuilder(
+              pageBuilder: (context, animation, secAnimation) => !homeProvider.roundTrip
+              ? MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
+                  ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+                  ChangeNotifierProvider.value(value: provider)
+                ],
+                child: PaymentPage(),
+              )
+              : MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(create: (_) => ArrivalTripPageProvider(ticket, provider, returnTicket: provider.returnTicket!)),
+                  ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+                  ChangeNotifierProvider.value(value: homeProvider),
+                  ChangeNotifierProvider.value(value: provider)
+                ],
+                child: ArrivalTripPage(),
+              ),
+              transitionDuration: Duration(milliseconds: 300),
+              transitionsBuilder: (context, animation, secAnimation, child){
+                var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+                return SlideTransition(
+                  child: child,
+                  position: Tween<Offset>(
+                    begin: Offset(1, 0),
+                    end: Offset(0, 0)
+                  ).animate(_animation),
+                );
+              },
+            ));
+            // !homeProvider.roundTrip
+            // ? Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
+            //   providers: [
+            //     ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
+            //     ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+            //     ChangeNotifierProvider.value(value: provider)
+            //   ],
+            //   child: PaymentPage(),
+            // ),))
+            // : Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
+            //   providers: [
+            //     ChangeNotifierProvider(create: (_) => ArrivalTripPageProvider(ticket, provider, returnTicket: provider.returnTicket!)),
+            //     ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+            //     ChangeNotifierProvider.value(value: homeProvider),
+            //     ChangeNotifierProvider.value(value: provider)
+            //   ],
+            //   child: ArrivalTripPage(),
+            // ),));
           }
           else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -372,7 +403,10 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
                           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(
                             value: provider,
                             child: PassengerDataForm(),
-                          ))).then((value) => provider.updatePassengerFormFieldComplete()),
+                          ))).then((value) {
+                            print(provider.phoneNumberFormKeys[0].currentState.toString() + " stare");
+                            provider.updatePassengerFormFieldComplete();
+                          }),
                           child: Text("Completează datele", style: Theme.of(context).textTheme.caption!.copyWith(
                             decoration: TextDecoration.underline,
                             fontWeight: FontWeight.normal,

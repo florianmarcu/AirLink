@@ -105,20 +105,43 @@ class _ArrivalTripsPageState extends State<ArrivalTripsPage>{
                     var ticket = provider.tickets[index];
                     return GestureDetector(
                       onTap: (){
-                        // wrapperHomePageProvider.tripPageProvider = TripPageProvider(ticket);
-                        // homeProvider.roundTrip 
-                        // ? wrapperHomePageProvider.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.easeIn)
-                        // : wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => MultiProvider(
+                        Navigator.push(context, PageRouteBuilder(
+                          pageBuilder: (context, animation, secAnimation) => MultiProvider(
                             providers: [
                               ChangeNotifierProvider(create: (context) => TripPageProvider(provider.departureTicket, returnTicket: ticket),),
                               ChangeNotifierProvider.value(value: homeProvider),
                               ChangeNotifierProvider.value(value: wrapperHomePageProvider)
                             ],
                             child: TripPage()
-                          )
+                          ),
+                          transitionDuration: Duration(milliseconds: 300),
+                          transitionsBuilder: (context, animation, secAnimation, child){
+                            var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+                            return SlideTransition(
+                              child: child,
+                              position: Tween<Offset>(
+                                begin: Offset(1, 0),
+                                end: Offset(0, 0)
+                              ).animate(_animation),
+                            );
+                          },
                         ));
+
+                        // wrapperHomePageProvider.tripPageProvider = TripPageProvider(ticket);
+                        // homeProvider.roundTrip 
+                        // ? wrapperHomePageProvider.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.easeIn)
+                        // : wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                        
+                        // Navigator.push(context, MaterialPageRoute(
+                        //   builder: (context) => MultiProvider(
+                        //     providers: [
+                        //       ChangeNotifierProvider(create: (context) => TripPageProvider(provider.departureTicket, returnTicket: ticket),),
+                        //       ChangeNotifierProvider.value(value: homeProvider),
+                        //       ChangeNotifierProvider.value(value: wrapperHomePageProvider)
+                        //     ],
+                        //     child: TripPage()
+                        //   )
+                        // ));
                       },
                       child: Container(
                         //padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),

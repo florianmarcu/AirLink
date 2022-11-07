@@ -19,6 +19,7 @@ class HomePageProvider with ChangeNotifier{
       // "Aeroport International Henri Coanda",
       // "Aeroport International Baneasa"
   ];
+  Map<String, dynamic> availableTrips = {};
   List<Company> transportationCompanies = [
       Company(
         id: "(toate companiile)",
@@ -41,33 +42,26 @@ class HomePageProvider with ChangeNotifier{
       transportationCompanies.add(Company(id: companiesQuery.docs[i].id, name: companiesQuery.docs[i].data()['name']));
       var tripsQuery = await companiesQuery.docs[i].reference.collection('available_trips').get();
       for (var i = 0; i < tripsQuery.docs.length; i++) {
+        addAvailableTrip(tripsQuery.docs[i].data()); 
         departureLocations.add(tripsQuery.docs[i].data()['departure_location_name']);
         arrivalLocations.add(tripsQuery.docs[i].data()['arrival_location_name']);
       }
     }
     this.transportationCompanies.addAll(transportationCompanies.toList());
-    this.departureLocations.addAll(departureLocations.toList());
-    this.arrivalLocations.addAll(arrivalLocations.toList());
-    selectedDepartureLocation = this.departureLocations.first;
-    selectedArrivalLocation = this.arrivalLocations.first;
     selectedTransportationCompany = this.transportationCompanies.first;
+    this.departureLocations.addAll(departureLocations.toList());
+    selectedDepartureLocation = this.departureLocations.first;
+    // this.arrivalLocations.addAll(arrivalLocations.toList());
+    updateAvailableArrivalLocations();
+    selectedArrivalLocation = this.arrivalLocations.first;
     notifyListeners();
   }
 
   PageController pageController = PageController(initialPage: 0);
-
-  void updateSelectedDepartureIndex(index){
-    selectedDepartureLocation = index;
-
-    notifyListeners();
-  }
-  void updateSelectedArrivalIndex(index){
-    selectedArrivalLocation = index;
-
-    notifyListeners();
-  }
   void updateSelectedDepartureLocation(String? departureLocation){
     selectedDepartureLocation = departureLocation!;
+    updateAvailableArrivalLocations();
+    selectedArrivalLocation = arrivalLocations.first; 
 
     notifyListeners();
   }
@@ -96,7 +90,18 @@ class HomePageProvider with ChangeNotifier{
 
     notifyListeners();
   }
+  void updateAvailableArrivalLocations(){
+    arrivalLocations = List.from(availableTrips[selectedDepartureLocation]);
+    print(arrivalLocations);
+  }
+
+  void addAvailableTrip(Map<String, dynamic> trip){
+    if(availableTrips[trip['departure_location_name']] == null)
+      availableTrips[trip['departure_location_name']] = List.from([trip['arrival_location_name']]);
+    else availableTrips[trip['departure_location_name']].add(trip['arrival_location_name']);  
+  }
 }
+
 
 enum TripType{
   roundtrip,

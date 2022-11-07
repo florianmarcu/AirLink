@@ -124,6 +124,9 @@ class PaymentPageProvider with ChangeNotifier{
     _loading();
 
     notifyListeners();
+
+    Authentication.updateUserPhoneNumber(ticket.passengerData![0]['phone_number']);
+
     return ticketDataToTicket(
       ticketData['company_id'] as String,
       ticketData['company_name'] as String,

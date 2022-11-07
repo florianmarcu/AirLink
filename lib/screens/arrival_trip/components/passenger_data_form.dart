@@ -23,6 +23,7 @@ class PassengerDataForm extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 0,
         heroTag: "passenger_data",
         backgroundColor: Theme.of(context).colorScheme.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
@@ -134,10 +135,19 @@ class PassengerDataForm extends StatelessWidget {
                               color: Theme.of(context).primaryColor,
                             ),
                             TextFormField(/// Phone number input
+                              key: provider.phoneNumberFormKeys[index],
                               keyboardType: TextInputType.phone,
                               validator: provider.validatePassengerPhoneNumber,
                               initialValue: provider.passengerData[index]['phone_number'] != "" ? provider.passengerData[index]['phone_number'] : null,
                               decoration: InputDecoration(
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: Colors.transparent),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: Colors.transparent),
+                                ),                
                                 fillColor: Colors.transparent,
                                 labelText: "Telefon",
                                 labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)

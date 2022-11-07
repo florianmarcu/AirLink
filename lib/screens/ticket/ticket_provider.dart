@@ -26,6 +26,7 @@ class TicketPageProvider with ChangeNotifier{
       SetOptions(merge: true)
     );
 
+    ticket.cancelled = true;
 
     _loading();
     notifyListeners();

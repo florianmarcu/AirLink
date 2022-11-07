@@ -19,6 +19,9 @@ dependencies:
   firebase_core:
   cloud_firestore:
   shared_preferences:
+  image_picker:
+  # font_awesome_flutter:
+  qr_flutter:
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +61,7 @@ flutter:
     - assets/icons/browse-options.png
     - assets/icons/fill-data.png
     - assets/icons/order-confirmed.png
+    - assets/icons/ticket.png
 
   # fonts:
   #   - family: Schyler

@@ -109,8 +109,7 @@ class PassengerDataForm extends StatelessWidget {
                               style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
                               // onChanged: (email) => provider.updatePassengerEmail(index, email),
                             ),
-                            index == 0
-                            ? Column(
+                            Column(
                               children: [
                                 Container(
                                   height: 1,
@@ -134,7 +133,6 @@ class PassengerDataForm extends StatelessWidget {
                                 ),
                               ],
                             )
-                            : Container()
                           ],
                         ),
                       ),

@@ -64,16 +64,38 @@ class _ArrivalTripPageState extends State<ArrivalTripPage> with AutomaticKeepAli
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
         onPressed: (){
           if(provider.isPassengerFormFieldComplete) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
-                ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
-                ChangeNotifierProvider.value(value: tripPageProvider,),
-                ChangeNotifierProvider.value(value: provider)
-              ],
+            Navigator.push(context, PageRouteBuilder(
+              pageBuilder: (context, animation, secAnimation) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
+                  ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+                  ChangeNotifierProvider.value(value: tripPageProvider,),
+                  ChangeNotifierProvider.value(value: provider)
+                ],
                 child: PaymentPage(),
               ),
+              transitionDuration: Duration(milliseconds: 300),
+              transitionsBuilder: (context, animation, secAnimation, child){
+                var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+                return SlideTransition(
+                  child: child,
+                  position: Tween<Offset>(
+                    begin: Offset(1, 0),
+                    end: Offset(0, 0)
+                  ).animate(_animation),
+                );
+              },
             ));
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider(
+            //   providers: [
+            //     ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
+            //     ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
+            //     ChangeNotifierProvider.value(value: tripPageProvider,),
+            //     ChangeNotifierProvider.value(value: provider)
+            //   ],
+            //     child: PaymentPage(),
+            //   ),
+            // ));
           }
           else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -358,7 +380,7 @@ class _ArrivalTripPageState extends State<ArrivalTripPage> with AutomaticKeepAli
                           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(
                             value: provider,
                             child: PassengerDataForm(),
-                          ))),
+                          ))).then((value) => provider.updatePassengerFormFieldComplete()),
                           child: Text("Completează datele", style: Theme.of(context).textTheme.caption!.copyWith(
                             decoration: TextDecoration.underline,
                             fontWeight: FontWeight.normal,
@@ -497,7 +519,7 @@ class _ArrivalTripPageState extends State<ArrivalTripPage> with AutomaticKeepAli
                     ],
                   ),
                   SizedBox(height: 20,),
-                  Text("Ora zborului", style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),),
+                  Text("Ora aterizării", style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),),
                   SizedBox(height: 10,),
                   Row(
                     children: [

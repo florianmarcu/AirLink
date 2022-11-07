@@ -24,6 +24,8 @@ class Ticket{
   DocumentReference? userTicketRef;
   DocumentReference? companyTicketRef;
   double roundTripPriceDiscount;
+  TicketStatus? status;
+  bool cancelled;
 
   Ticket({
     this.id,
@@ -46,7 +48,9 @@ class Ticket{
     this.passengerData,
     this.userTicketRef,
     this.companyTicketRef,
-    required this.roundTripPriceDiscount
+    required this.roundTripPriceDiscount,
+    required this.status,
+    required this.cancelled
   });
 
 }
@@ -56,12 +60,20 @@ enum PaymentMethod{
   card
 }
 
+enum TicketStatus{
+  past,
+  upcoming,
+}
+
 Ticket ticketDataToTicket(String companyId, String companyName, String companyAddress, DateTime departureDay, String departureTime, String arrivalTime, Map<String, dynamic> data){
   var departureDate = DateTime(departureDay.year, departureDay.month, departureDay.day, int.parse(departureTime.substring(0,2)), int.parse(departureTime.substring(3,5)));
   var arrivalDate = arrivalTime.compareTo(departureTime) > 0 
   ? DateTime(departureDay.year, departureDay.month, departureDay.day, int.parse(arrivalTime.substring(0,2)), int.parse(arrivalTime.substring(3,5)))
   : DateTime(departureDate.add(Duration(days: 1)).year, departureDate.add(Duration(days: 1)).month, departureDate.add(Duration(days: 1)).day, int.parse(arrivalTime.substring(0,2)), int.parse(arrivalTime.substring(3,5)));
   var id = generateId();
+  TicketStatus status = departureDate.compareTo(DateTime.now().toLocal()) > 0 ? TicketStatus.upcoming : TicketStatus.past;
+  bool cancelled = (data['cancelled'] != null && data['cancelled'] == true) ? true : false; 
+  print(cancelled.toString() + "cancelled" + data['id'].toString());
   return Ticket(
     id: data['id'] != null ? data['id'] : id,
     departureLocationName: data['departure_location_name'],
@@ -80,7 +92,9 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     userTicketRef: data['user_ticket_ref'],
     companyTicketRef: data['company_ticket_ref'],
     airCompanyName: data['air_company_name'],
-    roundTripPriceDiscount: data['round_trip_price_discount'] == null ? 0 : data['round_trip_price_discount'].toDouble()
+    roundTripPriceDiscount: data['round_trip_price_discount'] == null ? 0 : data['round_trip_price_discount'].toDouble(),
+    status: status,
+    cancelled: cancelled
   );
 }
 

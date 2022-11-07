@@ -22,7 +22,7 @@ class AppDrawer extends StatelessWidget {
               accountEmail: Text(user.email != null ? user.email! : "", style: Theme.of(context).textTheme.caption),
               currentAccountPicture: user.photoURL == null
               ? Icon(Icons.person, size: 40, color: Theme.of(context).highlightColor,)
-              : ClipRRect(borderRadius: BorderRadius.circular(30), child: Image.network(user.photoURL!)),
+              : ClipOval(child: Image.network(user.photoURL!,  width: 30, height: 30, fit: BoxFit.cover), ),
             ),
             Expanded(
               child: Container(),

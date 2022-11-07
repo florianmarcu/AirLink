@@ -13,7 +13,7 @@ class TripPageProvider with ChangeNotifier{
   String selectedAirline = "Tarom";
   int selectedPassengerNumber = 1;
   DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
-  GlobalKey<FormFieldState> phoneNumberFormKey = GlobalKey<FormFieldState>();
+  List<GlobalKey<FormFieldState>> phoneNumberFormKeys = [GlobalKey<FormFieldState>()];
 
 
   List passengerData = [
@@ -74,31 +74,43 @@ class TripPageProvider with ChangeNotifier{
   }
 
   void updatePassengerFormFieldComplete(){
-    isPassengerFormFieldComplete = passengerData.fold(true, (previousValue, element) => previousValue && (element['name'] != "" && element['email'] != "" && element['phone_number'] != ""));
-    if(passengerData[0]['phone_number'] != "") {
-      bool isValid = phoneNumberFormKey.currentState!.validate();
-      if(!isValid)
-        isPassengerFormFieldComplete = false;
-    }
+    isPassengerFormFieldComplete = passengerData.fold(true, (previousValue, element) => 
+      previousValue && 
+      (element['name'] != "" && element['email'] != "" && element['phone_number'] != "" && validatePassengerPhoneNumber(element['phone_number']) == null)
+    );
+    // print(phoneNumberFormKeys[passengerData.indexOf(passengerData[0])].currentState != null && phoneNumberFormKeys[passengerData.indexOf(passengerData[0])].currentState!.validate());
+    //print(passengerData);
+    // print(isPassengerFormFieldComplete.toString());
+    // if(phoneNumberFormKeys[0].currentState == null) {
+    //   print("este null");
+    // }
     notifyListeners();
   }
 
   void updatePassengerDataLength(int value){
-    if(passengerData.length > value)
+    if(passengerData.length > value) {
       passengerData = List.from(passengerData.sublist(0,value));
-    else {
+      //phoneNumberFormKeys = phoneNumberFormKeys.sublist(0, value);
+      print(phoneNumberFormKeys[passengerData.indexOf(passengerData[0])].currentState.toString() + " before");
+      phoneNumberFormKeys.removeRange(value, passengerData.length);
+      print(phoneNumberFormKeys[passengerData.indexOf(passengerData[0])].currentState.toString() + " after");
+    } else {
+      print(passengerData.length.toString() + " sdasdasd "+ value.toString());
       for (var i = passengerData.length; i < value; i++) {
         passengerData.add({
           "name" : "",
           "email" : "",
+          "phone_number" : "",
           "luggage" : {
             "backpack" : true,
             "hand" : false,
             "check-in": false
           }
         });
+        phoneNumberFormKeys.add(GlobalKey<FormFieldState>());
       }
     }
+    print(passengerData);
 
     updatePassengerFormFieldComplete();
 
@@ -136,11 +148,13 @@ class TripPageProvider with ChangeNotifier{
   }
 
   void updateSelectedPassengerNumber(value){
-    selectedPassengerNumber = value;
+    if(selectedPassengerNumber != value){
+      selectedPassengerNumber = value;
 
-    ticket.passengersNo = value;
+      ticket.passengersNo = value;
 
-    updatePassengerDataLength(value);
+      updatePassengerDataLength(value);
+    }
 
     notifyListeners();
   }
@@ -150,8 +164,9 @@ class TripPageProvider with ChangeNotifier{
 
     notifyListeners();
   }
-  ///TODO
+
   String? validatePassengerPhoneNumber(String? phoneNumber){
+    // print("numar $phoneNumber");
     String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = RegExp(pattern);
     if (phoneNumber != null)

@@ -107,13 +107,9 @@ class _TripsPageState extends State<TripsPage>{
                     var ticket = provider.tickets[index];
                     return GestureDetector(
                       onTap: (){
-                        // wrapperHomePageProvider.tripPageProvider = TripPageProvider(ticket);
-                        // !homeProvider.roundTrip 
-                        // ? wrapperHomePageProvider.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.easeIn)
-                        // : wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                        !homeProvider.roundTrip
-                        ? Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => MultiProvider(
+                        Navigator.push(context, PageRouteBuilder(
+                          pageBuilder: (context, animation, secAnimation) => !homeProvider.roundTrip
+                          ? MultiProvider(
                             providers: [
                               ChangeNotifierProvider(create: (context) => TripPageProvider(ticket),),
                               ChangeNotifierProvider<HomePageProvider>.value(value: homeProvider),
@@ -121,17 +117,52 @@ class _TripsPageState extends State<TripsPage>{
                             ],
                             child: TripPage()
                           )
-                        ))
-                        : Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => MultiProvider(
+                          : MultiProvider(
                             providers: [
                               ChangeNotifierProvider(create: (context) => ArrivalTripsPageProvider(homeProvider, ticket),),
                               ChangeNotifierProvider.value(value: wrapperHomePageProvider),
                               ChangeNotifierProvider<HomePageProvider>.value(value: homeProvider),
                             ],
                             child: ArrivalTripsPage()
-                          )
-                        ));
+                          ),
+                          transitionDuration: Duration(milliseconds: 300),
+                          transitionsBuilder: (context, animation, secAnimation, child){
+                            var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+                            return SlideTransition(
+                              child: child,
+                              position: Tween<Offset>(
+                                begin: Offset(1, 0),
+                                end: Offset(0, 0)
+                              ).animate(_animation),
+                            );
+                          },
+                      ));
+                        // wrapperHomePageProvider.tripPageProvider = TripPageProvider(ticket);
+                        // !homeProvider.roundTrip 
+                        // ? wrapperHomePageProvider.pageController.animateToPage(3, duration: Duration(milliseconds: 300), curve: Curves.easeIn)
+                        // : wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                        
+                        // !homeProvider.roundTrip
+                        // ? Navigator.push(context, MaterialPageRoute(
+                        //   builder: (context) => MultiProvider(
+                        //     providers: [
+                        //       ChangeNotifierProvider(create: (context) => TripPageProvider(ticket),),
+                        //       ChangeNotifierProvider<HomePageProvider>.value(value: homeProvider),
+                        //       ChangeNotifierProvider.value(value: wrapperHomePageProvider)
+                        //     ],
+                        //     child: TripPage()
+                        //   )
+                        // ))
+                        // : Navigator.push(context, MaterialPageRoute(
+                        //   builder: (context) => MultiProvider(
+                        //     providers: [
+                        //       ChangeNotifierProvider(create: (context) => ArrivalTripsPageProvider(homeProvider, ticket),),
+                        //       ChangeNotifierProvider.value(value: wrapperHomePageProvider),
+                        //       ChangeNotifierProvider<HomePageProvider>.value(value: homeProvider),
+                        //     ],
+                        //     child: ArrivalTripsPage()
+                        //   )
+                        // ));
                       },
                       child: Container(
                         //padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),

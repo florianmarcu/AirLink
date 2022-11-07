@@ -105,7 +105,7 @@ exports.sendEmailTicketConfirmationToUser = functions.firestore
                     ticket: {
                         id: data['id'],
                         passengerName: element['name'],
-                        phoneNumber: data['phone_number'],
+                        phoneNumber: element['phone_number'],
                         companyName: data['company_name'],
                         company: data['company_name'],
                         companyAddress: data['company_address'],

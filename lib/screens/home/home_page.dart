@@ -73,8 +73,7 @@ class HomePage extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             child: DropdownButton<String>(
                               borderRadius: BorderRadius.circular(30),
-                              hint: Text("De la",
-                                  style: Theme.of(context).textTheme.subtitle1),
+                              hint: Text("De la", style: Theme.of(context).textTheme.subtitle1),
                               icon: Icon(Icons.arrow_downward),
                               dropdownColor: Theme.of(context).primaryColor,
                               iconEnabledColor:
@@ -102,7 +101,7 @@ class HomePage extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             child: DropdownButton<String>(
                                 borderRadius: BorderRadius.circular(30),
-                                hint: Text("Până la"),
+                                hint: Text("Până la", style: Theme.of(context).textTheme.subtitle1),
                                 icon: Icon(Icons.arrow_downward),
                                 dropdownColor: Theme.of(context).primaryColor,
                                 iconEnabledColor:
@@ -307,15 +306,27 @@ class HomePage extends StatelessWidget {
                     //   backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary)
                     // ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MultiProvider( /// Second screen - contains the departures available from the selected data
-                        providers: [
-                          ChangeNotifierProvider<TripsPageProvider>(create: (_) => TripsPageProvider(provider)),
-                          ChangeNotifierProvider<HomePageProvider>.value(value: provider),
-                          ChangeNotifierProvider<WrapperHomePageProvider>.value(value: wrapperHomePageProvider),
-                        ],
-                        child: TripsPage()
-                      )));
-
+                      Navigator.push(context, PageRouteBuilder(
+                        pageBuilder: (context, animation, secAnimation) => MultiProvider( /// Second screen - contains the departures available from the selected data
+                          providers: [
+                            ChangeNotifierProvider<TripsPageProvider>(create: (_) => TripsPageProvider(provider)),
+                            ChangeNotifierProvider<HomePageProvider>.value(value: provider),
+                            ChangeNotifierProvider<WrapperHomePageProvider>.value(value: wrapperHomePageProvider),
+                          ],
+                          child: TripsPage()
+                        ),
+                        transitionDuration: Duration(milliseconds: 300),
+                        transitionsBuilder: (context, animation, secAnimation, child){
+                          var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+                          return SlideTransition(
+                            child: child,
+                            position: Tween<Offset>(
+                              begin: Offset(1, 0),
+                              end: Offset(0, 0)
+                            ).animate(_animation),
+                          );
+                        },
+                      ));
                       // wrapperHomePageProvider.pageController.nextPage(
                       //     duration: Duration(milliseconds: 300),
                       //     curve: Curves.easeIn);

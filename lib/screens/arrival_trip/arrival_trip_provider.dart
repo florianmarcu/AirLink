@@ -14,13 +14,15 @@ class ArrivalTripPageProvider with ChangeNotifier{
   bool isPassengerFormFieldComplete = false;
   String selectedAirline = "Tarom";
   int selectedPassengerNumber = 1;
-  late DateTime selectedDepartureDateAndHour;
+  DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
+  List<GlobalKey<FormFieldState>> phoneNumberFormKeys = [GlobalKey<FormFieldState>()];
 
 
   List passengerData = [
     {
       "name" : Authentication.auth.currentUser!.displayName,
       "email" : Authentication.auth.currentUser!.email,
+      "phone_number" : Authentication.auth.currentUser!.phoneNumber == null || Authentication.auth.currentUser!.phoneNumber == "" ? "" : Authentication.auth.currentUser!.phoneNumber,
       "luggage" : {
         "backpack" : true,
         "hand" : false,
@@ -31,10 +33,12 @@ class ArrivalTripPageProvider with ChangeNotifier{
 
   ArrivalTripPageProvider(this.ticket, this.tripPageProvider, {required this.returnTicket}){
     passengerData = List.from(tripPageProvider.passengerData);
+    phoneNumberFormKeys = List.from(tripPageProvider.phoneNumberFormKeys);
     selectedPassengerNumber = tripPageProvider.passengerData.length;
-    updatePassengerFormFieldComplete();
+    isPassengerFormFieldComplete = tripPageProvider.isPassengerFormFieldComplete;
+    //updatePassengerFormFieldComplete();
     selectedDepartureDateAndHour = returnTicket.arrivalTime;
-    selectedDepartureDateAndHour = returnTicket.departureTime;
+    // selectedDepartureDateAndHour = returnTicket.departureTime;
   }
 
   void updateSelectedDepartureDateAndHour(DateTime date){
@@ -77,27 +81,34 @@ class ArrivalTripPageProvider with ChangeNotifier{
   }
 
   void updatePassengerFormFieldComplete(){
-    isPassengerFormFieldComplete = passengerData.fold(true, (previousValue, element) => previousValue && (element['name'] != "" && element['email'] != ""));
-
+    isPassengerFormFieldComplete = passengerData.fold(true, (previousValue, element) => 
+      previousValue && 
+      (element['name'] != "" && element['email'] != "" && element['phone_number'] != "" && validatePassengerPhoneNumber(element['phone_number']) == null) 
+    );
+    print(isPassengerFormFieldComplete);
     notifyListeners();
   }
 
   void updatePassengerDataLength(int value){
-    if(passengerData.length > value)
+    if(passengerData.length > value) {
       passengerData = List.from(passengerData.sublist(0,value));
-    else {
+      phoneNumberFormKeys = phoneNumberFormKeys.sublist(0, value);
+    } else {
       for (var i = passengerData.length; i < value; i++) {
         passengerData.add({
           "name" : "",
           "email" : "",
+          "phone_number" : "",
           "luggage" : {
             "backpack" : true,
             "hand" : false,
             "check-in": false
           }
         });
+        phoneNumberFormKeys.add(GlobalKey<FormFieldState>());
       }
     }
+    print(passengerData);
 
     updatePassengerFormFieldComplete();
 
@@ -135,11 +146,13 @@ class ArrivalTripPageProvider with ChangeNotifier{
   }
 
   void updateSelectedPassengerNumber(value){
-    selectedPassengerNumber = value;
+    if(selectedPassengerNumber != value){
+      selectedPassengerNumber = value;
 
-    returnTicket.passengersNo = value;
+      returnTicket.passengersNo = value;
 
-    updatePassengerDataLength(value);
+      updatePassengerDataLength(value);
+    }
 
     notifyListeners();
   }
@@ -150,9 +163,16 @@ class ArrivalTripPageProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  ///TODO
-  String validatePassengerPhoneNumber(String? phoneNumber){
-    // if(phoneNumber == "" || phoneNumber.contains(other));
-    return "";
+  String? validatePassengerPhoneNumber(String? phoneNumber){
+    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp regExp = RegExp(pattern);
+    if (phoneNumber != null)
+      if(
+        (phoneNumber.startsWith("0") && phoneNumber.length != 10) || 
+        (phoneNumber.startsWith("+") && phoneNumber.length != 12) ||
+        (!regExp.hasMatch(phoneNumber))
+      )
+      return "Numărul introdus este invalid";
+    return null;
   }
 }

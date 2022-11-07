@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:transportation_app/config/config.dart';
 import 'dart:math' as math;
 import 'package:transportation_app/screens/ticket/ticket_provider.dart';
@@ -31,11 +32,12 @@ class TicketPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: "trip",
         elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.secondary,
+        backgroundColor: !ticket.cancelled ? Theme.of(context).colorScheme.secondary : Colors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
-        onPressed: () async{
+        onPressed: !ticket.cancelled
+        ? () async{
           var cancel = false;
-          showCupertinoDialog(
+          await showCupertinoDialog(
             context: context,
             barrierDismissible: true, 
             builder: (context) => AlertDialog(
@@ -43,7 +45,7 @@ class TicketPage extends StatelessWidget {
               titleTextStyle: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18),
               title: Center(
                 child: Container(
-                  child: Text("Pentru a vizualiza profilul, trebuie să fiți logat.", textAlign: TextAlign.center,),
+                  child: Text("Sunteți sigur că vreți să anulați biletul?", textAlign: TextAlign.center,),
                 ),
               ),
               actionsAlignment: MainAxisAlignment.center,
@@ -59,23 +61,29 @@ class TicketPage extends StatelessWidget {
                 ),
               ],
           ));
-          await provider.cancelTicket();
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
+          if(cancel){
+            await provider.cancelTicket();
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
                   "Biletul a fost anulat."
                 ),
               )
             );
+          }
+          else{
+            // Navigator.pop(context);
+          }
           // wrapperHomePageProvider.paymentPageProvider = PaymentPageProvider();
           // wrapperHomePageProvider.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-        }, 
+        }
+        : null, 
         label: Container(
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width*0.4,
           child: Text(
-            "Anulează bilet",
+            !ticket.cancelled ? "Anulează bilet" : "Anulat",
             //"Plătește ${removeDecimalZeroFormat(ticket.price*provider.selectedPassengerNumber)}RON",
             style: Theme.of(context).textTheme.headline6,
           ),
@@ -215,7 +223,38 @@ class TicketPage extends StatelessWidget {
                       SizedBox(width: 20),
                       Text("${ticket.passengersNo}", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, fontSize: 18) ,)
                     ],
-                  )
+                  ),
+
+                  SizedBox(height: 20,),
+                  Text("Bagaje", style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.normal,),),
+                  SizedBox(height: 10),
+                  Column( /// Luggages
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: ticket.passengerData!.map(
+                      (passenger) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 30,
+                              child: Stack(
+                                children: [
+                                  Icon(Icons.person, size: 20,color: Theme.of(context).primaryColor),
+                                  Positioned(
+                                    top: 0 ,
+                                    right: 0,
+                                    child: Text("${ticket.passengerData!.indexOf(passenger)+1}", style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).primaryColor))
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10,),
+                            formatLuggage(context, passenger['luggage'], Theme.of(context).primaryColor),
+                          ],
+                        ),
+                      )
+                    ).toList(),
+                  ),
                 ]
               ),
               SizedBox(height: 20),
@@ -247,6 +286,15 @@ class TicketPage extends StatelessWidget {
                     ],
                   )
                 ]
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 100),
+                  child: QrImage(
+                    data: ticket.id.toString(),
+                    size: 200,
+                  ),
+                ),
               ),
               // SizedBox(height: 20),
               // Column( /// Passenger data
@@ -435,6 +483,7 @@ class TicketPage extends StatelessWidget {
               //     ],
               //   ),
               // ),
+
             ],
           ),
           provider.isLoading
