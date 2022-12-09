@@ -22,7 +22,7 @@ String removeDecimalZeroFormat(double n) {
 
 String? formatDateToHourAndMinutes(DateTime? date){
   return date != null
-  ? (date.hour > 9 ? date.hour.toString() : "0" + date.hour.toString()) + ":" + (date.minute != 0 ? date.minute.toString() : "00")
+  ? (date.hour > 9 ? date.hour.toString() : "0" + date.hour.toString()) + ":" + (date.minute != 0 ? ( date.minute < 10 ? "0" + date.minute.toString(): date.minute.toString() ): "00")
   : "";
 }
 

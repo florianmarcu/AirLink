@@ -30,8 +30,15 @@ class TripPageProvider with ChangeNotifier{
   ]; 
 
   TripPageProvider(this.ticket, {this.returnTicket}){
+    updateMaxPassengerCapacity();
     updatePassengerFormFieldComplete();
     selectedDepartureDateAndHour = ticket.arrivalTime;
+  }
+
+  void updateMaxPassengerCapacity(){
+    print(ticket.capacity);
+    if(ticket.capacity != null)
+      passengerNumberList = passengerNumberList.sublist(0, ticket.capacity!);
   }
 
   void updateSelectedDepartureDateAndHour(DateTime date){

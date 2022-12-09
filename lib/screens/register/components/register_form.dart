@@ -7,6 +7,7 @@ class RegisterForm extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = context.watch<RegisterPageProvider>();
     return Form(
+      key: provider.formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -16,6 +17,7 @@ class RegisterForm extends StatelessWidget {
             decoration: InputDecoration(
               labelText: "Nume",
             ),
+            validator: provider.validateName,
             onChanged: (name) => provider.setName(name),
           ),
           SizedBox(height: 20),
@@ -25,6 +27,7 @@ class RegisterForm extends StatelessWidget {
             decoration: InputDecoration(
               labelText: "Email",
             ),
+            validator: provider.validateEmail,
             onChanged: (email) => provider.setEmail(email),
           ),
           SizedBox(height: 20),
@@ -41,6 +44,7 @@ class RegisterForm extends StatelessWidget {
                 padding: EdgeInsets.zero, 
               ),
             ),
+            validator: provider.validatePassword,
             onChanged: (password) => provider.setPassword(password),
           ),
           SizedBox(height: 15,),

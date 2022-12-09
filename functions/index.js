@@ -1,6 +1,7 @@
 require('dotenv').config()
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
+const stripe = require('stripe')(functions.config().stripe.livekey);
 admin.initializeApp();
 
 const db = admin.firestore();
@@ -133,3 +134,69 @@ exports.sendEmailTicketConfirmationToUser = functions.firestore
             });
         })
     });
+
+const generateResponse = function (intent){
+    // console.log(intent.client_secret + " client secret");
+    switch(intent.status){
+        case 'requires_action':
+            return{
+                clientSecret: intent.client_secret,
+                requiresAction: true,
+                status: intent.status
+            }
+        case 'requires_payment_method':
+            return{
+                'error' : "Your card was denied, please provide a new payment method."
+            }
+        case 'succeeded':
+            console.log("Payment succeeded");
+            return { clientSecret: intent.client_secret, status: intent.status}
+    }
+    return "error: failed";
+}
+
+const calculateOrderAmount = (items) => {
+    prices = [];
+
+    return 10;
+}
+
+exports.StripePayEndpointMethodId = functions.https.onRequest(async (req, res) => {
+    const {paymentMethodId, value,  currency, useStripeSdk} =  req.body;
+
+    const orderAmount = 1;
+
+    try{
+        if(paymentMethodId){
+            const params = {
+                amount: value,
+                confirm: true,
+                confirmation_method: 'manual',
+                currency: currency,
+                payment_method: paymentMethodId,
+                use_stripe_sdk: useStripeSdk,
+            }
+            const intent = await stripe.paymentIntents.create(params);
+            console.log(`Intent: ${intent}`);
+            return res.send(generateResponse(intent)); 
+        }
+        return res.sendStatus(400)
+    } catch(e) {
+        return res.send({error: e.message});  
+    }
+});
+
+
+exports.StripePayEndpointIntentId = functions.https.onRequest(async (req, res) => {
+    const {paymentIntentId} = req.body;
+    try{
+        if(paymentIntentId){
+            const intent = await stripe.paymentIntents.confirm(paymentIntentId);
+            return res.send(generateResponse(intent));
+        }
+        return res.sendStatus(400);
+    }
+    catch (e) {
+        return res.send({error: e.message});
+    }
+});

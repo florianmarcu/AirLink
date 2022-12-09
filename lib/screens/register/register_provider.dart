@@ -9,13 +9,17 @@ class RegisterPageProvider with ChangeNotifier{
   bool passwordVisible = false;
   bool isLoading = false;
 
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   void register(BuildContext context) async{
     _loading();
     
-    var result = await Authentication.registerWithEmailAndPassword(name!, email!, password!);
-    if(result.runtimeType == FirebaseAuthException)
-      _handleAuthError(context, result);
-    else Navigator.pop(context);
+    if(formKey.currentState!.validate()){
+      var result = await Authentication.registerWithEmailAndPassword(name!, email!, password!);
+      if(result.runtimeType == FirebaseAuthException)
+        _handleAuthError(context, result);
+      else Navigator.pop(context);
+    }
 
     _loading();
 
@@ -44,6 +48,25 @@ class RegisterPageProvider with ChangeNotifier{
     passwordVisible = !passwordVisible;
 
     notifyListeners();
+  }
+
+  String? validateName(String? name){
+    if(name == null || name == "")
+      return "Trebuie să introduceți un nume.";
+    return null;
+  }
+  
+  String? validateEmail(String? email){
+    if(email == null || email == "")
+      return "Trebuie să introduceți un email.";
+    return null;
+
+  }
+
+  String? validatePassword(String? password){
+    if(password == null || password == "")
+      return "Trebuie să introduceți o parolă.";
+    return null;
   }
 
   /// Upon any error returned by the sign-in methods, shows a SnackBar accordignly

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/models/models.dart';
+import 'package:transportation_app/screens/home/home_provider.dart';
 
 class TripDetails extends StatelessWidget {
   final Ticket ticket;
   final int passengersNo;
   final List passengerData;
+  final TransportationType transportationType;
   
-  TripDetails(this.ticket, this.passengersNo, this.passengerData);
+  TripDetails(this.ticket, this.passengersNo, this.passengerData, this.transportationType);
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +115,8 @@ class TripDetails extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Tarif", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
-                passengersNo > 1
+                Text("Total", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
+                passengersNo > 1 && transportationType != TransportationType.private
                 ? Text("${passengersNo} x ${removeDecimalZeroFormat(ticket.price)} = ${removeDecimalZeroFormat(ticket.price*passengersNo)} RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
                 : Text("${removeDecimalZeroFormat(ticket.price)} RON", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15))
               ],

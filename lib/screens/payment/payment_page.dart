@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:transportation_app/config/config.dart';
+import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/arrival_trip/arrival_trip_provider.dart';
+import 'package:transportation_app/screens/home/home_provider.dart';
 import 'package:transportation_app/screens/payment/components/trip_details.dart';
 import 'package:transportation_app/screens/payment/payment_provider.dart';
 import 'package:transportation_app/screens/ticket/ticket_page.dart';
@@ -8,23 +11,15 @@ import 'package:transportation_app/screens/ticket/ticket_provider.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
-class PaymentPage extends StatefulWidget {
-  @override
-  State<PaymentPage> createState() => _PaymentPageState();
-}
-
-class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClientMixin{
-
-  @override
-  bool get wantKeepAlive => true;
+class PaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var provider = context.watch<PaymentPageProvider>();
     var tripPageProvider = context.watch<TripPageProvider>();
     var ticket = tripPageProvider.ticket;
+    var homePageProvider = context.watch<HomePageProvider>();
     var returnTicket;
     ArrivalTripPageProvider? arrivalTripPageProvider;
     if(tripPageProvider.returnTicket != null) {
@@ -59,34 +54,26 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30))),
-        onPressed: (){
-          provider.makeReservation(ticket, returnTicket, tripPageProvider, arrivalTripPageProvider)
-          .then((newTicket){
-            Navigator.popUntil(context, (route) => route.isFirst);
-            // wrapperHomePageProvider.pageController.jumpToPage(0);
-            wrapperHomePageProvider.updateSelectedScreenIndex(1);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-              create: (_) => TicketPageProvider(newTicket),
-              child: TicketPage(),
-            )));
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  ticket.passengersNo == 1
-                  ? "Confirmarea biletului dumneavoastră a fost trimisă pe email"
-                  : "Confirmarea biletelor dumneavoastră a fost trimisă pe fiecare adresă de email"
-                ),
-              )
-            );
-          });
+        onPressed: provider.isLoading
+        ? null 
+        : () async{
+          if(provider.paymentMethod == PaymentMethod.card) {
+            var result = await provider.pay(context, ticket, returnTicket, tripPageProvider, arrivalTripPageProvider);
+            if(result == null){
+              provider.handlePaymentError(context, result);
+            }
+            // _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
+          }
         }, 
         label: Container(
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width*0.4,
-          child: Text(
+          child: provider.isLoading
+          ? CircularProgressIndicator()
+          : Text(
             provider.paymentMethod == PaymentMethod.cash
             ? "Rezervă"
-            : "Plătește ${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber)}RON",
+            : "Plătește ${removeDecimalZeroFormat(provider.total!)}RON",
             style: Theme.of(context).textTheme.headline6,
           ),
         )
@@ -101,15 +88,13 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
               returnTicket != null
               ? Text("Drum plecare", style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 18),)
               : Container(),
-
-              TripDetails(ticket, tripPageProvider.selectedPassengerNumber, tripPageProvider.passengerData),
-              
+              TripDetails(ticket, tripPageProvider.selectedPassengerNumber, tripPageProvider.passengerData, homePageProvider.selectedTransportationType),
               SizedBox( height: 20,),
               returnTicket != null
               ? Text("Drum întoarcere", style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 18),)
               : Container(),
               returnTicket != null
-              ? TripDetails(returnTicket, arrivalTripPageProvider!.selectedPassengerNumber, arrivalTripPageProvider.passengerData)
+              ? TripDetails(returnTicket, arrivalTripPageProvider!.selectedPassengerNumber, arrivalTripPageProvider.passengerData, homePageProvider.selectedTransportationType)
               : Container(),
               SizedBox(height: 15,),
               Row( /// Row of lines
@@ -137,16 +122,43 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
                   children: [
                     Text("Total", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
                     Text(
-                      returnTicket != null
-                      ? "${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber + returnTicket.price*arrivalTripPageProvider!.selectedPassengerNumber - ticket.roundTripPriceDiscount)} RON"
-                      : "${removeDecimalZeroFormat(ticket.price*tripPageProvider.selectedPassengerNumber)} RON", 
+                      "${provider.total} RON", 
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15),
                     )
                   ],
                 ),
               ),
               SizedBox(height: 20,),
-              ListTile(
+              ListTile( /// Choose card
+                onTap: () => provider.updatePaymentMethod(PaymentMethod.card),
+                contentPadding: EdgeInsets.zero,
+                title: Text("Card", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
+                leading: Radio(
+                  value: PaymentMethod.card,
+                  groupValue: provider.paymentMethod,
+                  onChanged: provider.updatePaymentMethod,
+                ),
+              ),
+              Builder(
+                builder: (context){
+                  var cardFormEditController = stripe.CardFormEditController();
+                  if(provider.paymentMethod == PaymentMethod.card){
+                    return stripe.CardFormField(
+                      enablePostalCode: false,
+                      controller: cardFormEditController,
+                      style: stripe.CardFormStyle(
+                        borderRadius: 20,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        borderWidth: 0,
+                        cursorColor: Theme.of(context).canvasColor
+                      ),
+                    );
+                  }
+                  else return Container();
+                },
+              ),
+              ListTile( /// Choose cash
+                onTap: () => provider.updatePaymentMethod(PaymentMethod.cash),
                 contentPadding: EdgeInsets.zero,
                 title: Text("Numerar", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
                 leading: Radio(
@@ -155,21 +167,8 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
                   onChanged: provider.updatePaymentMethod,
                 ),
               ),
-              AbsorbPointer(
-                child: Opacity(
-                  opacity: 0.4,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text("Card", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
-                    leading: Radio(
-                      value: PaymentMethod.card,
-                      groupValue: provider.paymentMethod,
-                      onChanged: provider.updatePaymentMethod,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 100,)
+              SizedBox(height: 20,),
+              SizedBox(height: 100,),
             ],
           ),
           provider.isLoading
@@ -186,5 +185,28 @@ class _PaymentPageState extends State<PaymentPage> with AutomaticKeepAliveClient
         ],
       ),
     );
+  }
+
+  _finishPayment(BuildContext context, PaymentPageProvider provider, WrapperHomePageProvider wrapperHomePageProvider, TripPageProvider tripPageProvider, ArrivalTripPageProvider? arrivalTripPageProvider, Ticket ticket, Ticket? returnTicket){
+
+    provider.makeReservation(ticket, returnTicket, tripPageProvider, arrivalTripPageProvider)
+    .then((newTicket){
+      Navigator.popUntil(context, (route) => route.isFirst);
+      // wrapperHomePageProvider.pageController.jumpToPage(0);
+      wrapperHomePageProvider.updateSelectedScreenIndex(1);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
+        create: (_) => TicketPageProvider(newTicket),
+        child: TicketPage(),
+      )));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            ticket.passengersNo == 1
+            ? "Confirmarea biletului dumneavoastră a fost trimisă pe email"
+            : "Confirmarea biletelor dumneavoastră a fost trimisă pe fiecare adresă de email"
+          ),
+        )
+      );
+    });
   }
 }

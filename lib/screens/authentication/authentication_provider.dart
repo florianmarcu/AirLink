@@ -8,6 +8,8 @@ class AuthenticationPageProvider with ChangeNotifier{
   String? password;
   bool passwordVisible = false;
   bool isLoading = false;
+  
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void logIn(BuildContext context, String signInMethod) async{
     _loading();
@@ -16,7 +18,8 @@ class AuthenticationPageProvider with ChangeNotifier{
     var result;
     switch(signInMethod){
       case "email_and_password":
-        result = await Authentication.signInWithEmailAndPassword(email!, password!);
+        if(formKey.currentState!.validate())
+          result = await Authentication.signInWithEmailAndPassword(email!, password!);
       break;
       case "anonimously":
         result = await Authentication.signInAnonimously();
@@ -54,6 +57,19 @@ class AuthenticationPageProvider with ChangeNotifier{
     passwordVisible = !passwordVisible;
 
     notifyListeners();
+  }
+
+  String? validateEmail(String? email){
+    if(email == null || email == "")
+      return "Trebuie să introduceți un email.";
+    return null;
+
+  }
+
+  String? validatePassword(String? password){
+    if(password == null || password == "")
+      return "Trebuie să introduceți o parolă.";
+    return null;
   }
 
   /// Upon any error returned by the sign-in methods, shows a SnackBar accordignly

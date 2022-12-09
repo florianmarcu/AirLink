@@ -32,6 +32,7 @@ class ArrivalTripPageProvider with ChangeNotifier{
   ]; 
 
   ArrivalTripPageProvider(this.ticket, this.tripPageProvider, {required this.returnTicket}){
+    updateMaxPassengerCapacity();
     passengerData = List.from(tripPageProvider.passengerData);
     phoneNumberFormKeys = List.from(tripPageProvider.phoneNumberFormKeys);
     selectedPassengerNumber = tripPageProvider.passengerData.length;
@@ -39,6 +40,11 @@ class ArrivalTripPageProvider with ChangeNotifier{
     //updatePassengerFormFieldComplete();
     selectedDepartureDateAndHour = returnTicket.arrivalTime;
     // selectedDepartureDateAndHour = returnTicket.departureTime;
+  }
+
+  void updateMaxPassengerCapacity(){
+    if(returnTicket.capacity != null)
+      passengerNumberList = passengerNumberList.sublist(0, returnTicket.capacity!);
   }
 
   void updateSelectedDepartureDateAndHour(DateTime date){

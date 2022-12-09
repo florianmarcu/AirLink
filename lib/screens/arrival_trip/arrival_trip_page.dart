@@ -6,28 +6,21 @@ import 'package:transportation_app/screens/arrival_trip/arrival_trip_provider.da
 import 'package:transportation_app/screens/cupertino_date_picker/cupertino_date_picker_page.dart';
 import 'package:transportation_app/screens/cupertino_hour_picker/cupertino_hour_picker_page.dart';
 import 'package:transportation_app/screens/date_and_hour_picker/date_and_hour_picker_page.dart';
+import 'package:transportation_app/screens/home/home_provider.dart';
 import 'package:transportation_app/screens/payment/payment_page.dart';
 import 'package:transportation_app/screens/payment/payment_provider.dart';
 import 'package:transportation_app/screens/arrival_trip/components/passenger_data_form.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
-class ArrivalTripPage extends StatefulWidget {
-  @override
-  State<ArrivalTripPage> createState() => _ArrivalTripPageState();
-}
-
-class _ArrivalTripPageState extends State<ArrivalTripPage> with AutomaticKeepAliveClientMixin{
-
-  @override
-  bool get wantKeepAlive => true;
+class ArrivalTripPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var provider = context.watch<ArrivalTripPageProvider?>();
     var tripPageProvider = context.watch<TripPageProvider>();
+    var homePageProvider = context.watch<HomePageProvider>();
     var ticket = provider!.returnTicket;
     return Scaffold(
       appBar: AppBar(
@@ -67,10 +60,11 @@ class _ArrivalTripPageState extends State<ArrivalTripPage> with AutomaticKeepAli
             Navigator.push(context, PageRouteBuilder(
               pageBuilder: (context, animation, secAnimation) => MultiProvider(
                 providers: [
-                  ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
+                  ChangeNotifierProvider(create: (_) => PaymentPageProvider(wrapperHomePageProvider.currentUser, homePageProvider, tripPageProvider.ticket, tripPageProvider, ticket, provider)),
                   ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
                   ChangeNotifierProvider.value(value: tripPageProvider,),
-                  ChangeNotifierProvider.value(value: provider)
+                  ChangeNotifierProvider.value(value: provider),
+                  ChangeNotifierProvider.value(value: homePageProvider,),
                 ],
                 child: PaymentPage(),
               ),

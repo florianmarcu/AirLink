@@ -59,7 +59,7 @@ class _DatePickerPageState extends State<DatePickerPage> {
               )
             ),
             child: CalendarDatePicker(
-              initialDate: provider.selectedDepartureDate, 
+              initialDate: provider.selectedDepartureDateAndHour, 
               firstDate: DateTime.now().toLocal(), 
               lastDate: DateTime.now().toLocal().add(Duration(days: 90)),
               onDateChanged: provider.updateSelectedDepartureDate

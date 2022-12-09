@@ -4,7 +4,7 @@ description: An app that helps the user book a shuttle to his airport
 
 publish_to: none
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -22,6 +22,8 @@ dependencies:
   image_picker:
   # font_awesome_flutter:
   qr_flutter:
+  flutter_stripe:
+  http:
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +64,8 @@ flutter:
     - assets/icons/fill-data.png
     - assets/icons/order-confirmed.png
     - assets/icons/ticket.png
+    - assets/icons/public.png
+    - assets/icons/private.png
 
   # fonts:
   #   - family: Schyler

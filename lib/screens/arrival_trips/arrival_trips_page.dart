@@ -8,12 +8,7 @@ import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.da
 import 'components/empty_list.dart';
 import 'components/filters_popup.dart';
 
-class ArrivalTripsPage extends StatefulWidget {
-  @override
-  State<ArrivalTripsPage> createState() => _ArrivalTripsPageState();
-}
-
-class _ArrivalTripsPageState extends State<ArrivalTripsPage>{
+class ArrivalTripsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +81,14 @@ class _ArrivalTripsPageState extends State<ArrivalTripsPage>{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Alege întoarcerea"),
-            Text("${formatDateToWeekdayAndDate(homeProvider.selectedArrivalDate)}", style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 16 ),)
+            Text.rich(TextSpan(children: [
+              WidgetSpan(child: Icon(Icons.calendar_today, size: 16,),),
+              WidgetSpan(child: SizedBox(width: 10,)),
+              TextSpan(
+                text: "${formatDateToWeekdayAndDate(homeProvider.selectedArrivalDateAndHour)}",
+                style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 16 )
+              )
+            ])),
           ],
         ),
       ),

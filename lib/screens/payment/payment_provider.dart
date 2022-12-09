@@ -1,23 +1,212 @@
+import 'dart:convert';
 import 'package:authentication/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
 import 'package:transportation_app/config/config.dart';
+import 'package:transportation_app/models/models.dart' as models;
 import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/arrival_trip/arrival_trip_provider.dart';
+import 'package:transportation_app/screens/home/home_provider.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
+export 'package:provider/provider.dart';
 
 class PaymentPageProvider with ChangeNotifier{
-  PaymentMethod paymentMethod = PaymentMethod.cash;
+  models.PaymentMethod paymentMethod = models.PaymentMethod.cash;
   bool isLoading = false;
+  CardFormEditController cardFormEditController = CardFormEditController();
+  PaymentStatus paymentStatus = PaymentStatus.initial;
+  CardFieldInputDetails? cardFieldInputDetails = CardFieldInputDetails(complete: false);
+  UserProfile? userProfile;
+  double? total = 0.0;
 
-  void updatePaymentMethod(PaymentMethod? paymentMethod){
+  PaymentPageProvider(this.userProfile, HomePageProvider homePageProvider,Ticket ticket, TripPageProvider tripPageProvider, [Ticket? returnTicket, ArrivalTripPageProvider? arrivalTripPageProvider]){
+    getData(ticket, homePageProvider, tripPageProvider, returnTicket, arrivalTripPageProvider);
+  }
+
+  void getData(Ticket ticket, HomePageProvider homePageProvider, TripPageProvider tripPageProvider, [Ticket? returnTicket, ArrivalTripPageProvider? arrivalTripPageProvider]){
+    _loading();
+    initCardFormEditController();
+    
+    if(homePageProvider.selectedTransportationType == TransportationType.private){
+      total =  ticket.price +
+      (returnTicket != null
+      ? returnTicket.price
+      : 0);
+    }
+    else{
+      total =  tripPageProvider.selectedPassengerNumber * ticket.price +
+      (returnTicket != null
+      ? arrivalTripPageProvider!.selectedPassengerNumber * returnTicket.price
+      : 0);
+    }
+
+    _loading();
+    notifyListeners();
+  }
+
+  void initCardFormEditController(){
+    cardFormEditController = CardFormEditController(initialDetails: cardFieldInputDetails);
+    // cardFormEditController.addListener(() { 
+    //   cardFieldInputDetails = cardFormEditController.details;
+    // });
+
+    notifyListeners();
+  }
+
+  void updateCardFieldInputDetails(CardFieldInputDetails? cardFieldInputDetails){
+    this.cardFieldInputDetails = cardFieldInputDetails;
+
+    print(cardFieldInputDetails);
+
+    notifyListeners();
+  }
+
+  void updatePaymentMethod(models.PaymentMethod? paymentMethod){
     this.paymentMethod = paymentMethod!;
 
     notifyListeners();
   }
-  
 
-  Future<Ticket> makeReservation(Ticket ticket, dynamic returnTicket, TripPageProvider tripPageProvider, ArrivalTripPageProvider? arrivalTripPageProvider) async{
+  Future<bool?> pay(BuildContext context, Ticket ticket, Ticket? returnTicket, TripPageProvider tripPageProvider, ArrivalTripPageProvider? arrivalTripPageProvider) async{
+
+    _loading();
+    
+    bool? result = null;
+
+    /// Create payment method
+    try{
+      final paymentMethod = await Stripe.instance.createPaymentMethod(
+        PaymentMethodParams.card(
+          paymentMethodData: PaymentMethodData(
+            billingDetails: BillingDetails(
+              email: Authentication.auth.currentUser!.email,
+              name: Authentication.auth.currentUser!.displayName
+              // email: Authentication.auth.currentUser!.email,
+              // name: Authentication.auth.currentUser!.displayName,
+              // address: Address(
+              //   city: "Bucharest",
+              //   line1: "Bulevardul Unirii 1",
+              //   line2: "Bulevardul Unirii 2",
+              //   postalCode: "032791",
+              //   country: "Romania",
+              //   state: "Romania"
+              // )
+            )
+          ) 
+        ),
+      );
+
+
+      final paymentIntentResults = await _callPayEndpointMethodId(
+        useStripeSdk: true,
+        paymentMethodId: paymentMethod.id,
+        currency: 'ron',
+        value: total!*100,
+      );
+
+      if(paymentIntentResults['erorr'] != null){
+        return null;
+      }
+
+      /// NO 3DS
+      /// Payments completes succesfully
+      if(paymentIntentResults['clientSecret'] != null && paymentIntentResults['requiresAction'] == null)
+        result =  true;
+
+      /// 3DS
+      /// User needs to confirm the payment
+      if(paymentIntentResults['clientSecret'] != null && paymentIntentResults['requiresAction'] == true){
+        final String clientSecret = paymentIntentResults['clientSecret'];
+        
+        /// User needs to confirm the payment
+        try{
+          final paymentIntent = await Stripe.instance.handleNextAction(clientSecret);
+
+          if(paymentIntent.status == PaymentIntentsStatus.RequiresConfirmation){
+            /// We make the Stripe API call
+            Map<String, dynamic> results = await _callPayEndpointIntentId(paymentIntentId: paymentIntent.id);
+            /// On 'results' contains an error
+            if(results['error'] != null){
+              return null;
+            }
+
+          }
+
+        }
+        catch(e) {
+          print(e.toString() + " error");
+          return null;
+        }
+
+      }
+      result = true;
+    }
+    /// The user didn't fill the card info correctly
+    on StripeException
+    catch(e){ 
+      print(e.error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Datele cardului nu sunt corecte"),
+      ));
+      result = false;
+    }
+
+
+    _loading();
+    
+    notifyListeners();
+
+    return result;
+  }
+
+  Future<Map<String, dynamic>> _callPayEndpointMethodId({
+    required bool useStripeSdk, 
+    required String paymentMethodId,
+    required String currency,
+    required double value
+    }) async{
+      final url = Uri.parse(
+        "https://us-central1-airlink-63554.cloudfunctions.net/StripePayEndpointMethodId"
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'useStripeSdk': true,
+            'paymentMethodId': paymentMethodId,
+            'currency': 'ron',
+            'value': value
+          }
+        )
+      );
+      print(response.body);
+      return json.decode(response.body);
+  }
+
+  Future<Map<String, dynamic>> _callPayEndpointIntentId({
+    required String paymentIntentId,
+    }) async{
+      final url = Uri.parse(
+        "https://us-central1-airlink-63554.cloudfunctions.net/StripePayEndpointIntentId"
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'paymentIntentId': paymentIntentId,
+          }
+        )
+      );
+      return json.decode(response.body);
+  }
+
+
+
+  Future<models.Ticket> makeReservation(models.Ticket ticket, dynamic returnTicket, TripPageProvider tripPageProvider, ArrivalTripPageProvider? arrivalTripPageProvider) async{
     _loading();
 
     var userTicketRef = FirebaseFirestore.instance.collection("users").doc(Authentication.auth.currentUser!.uid).collection("tickets").doc();
@@ -125,9 +314,9 @@ class PaymentPageProvider with ChangeNotifier{
 
     notifyListeners();
 
-    Authentication.updateUserPhoneNumber(ticket.passengerData![0]['phone_number']);
+    Authentication.updateUserPhoneNumber(tripPageProvider.passengerData[0]['phone_number']);
 
-    return ticketDataToTicket(
+    return models.ticketDataToTicket(
       ticketData['company_id'] as String,
       ticketData['company_name'] as String,
       ticketData['company_address'] as String,
@@ -138,14 +327,23 @@ class PaymentPageProvider with ChangeNotifier{
     );
   }
 
+  void handlePaymentError(BuildContext context, result) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("A aparut o eroare ${result}"),
+    ));
+  }
+
   _loading(){
     isLoading = !isLoading;
     
     notifyListeners();
   }
+
 }
 
-enum PaymentMethod{
-  cash,
-  card
+enum PaymentStatus{
+  initial,
+  loading,
+  success,
+  failure
 }

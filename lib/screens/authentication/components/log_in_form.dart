@@ -11,6 +11,7 @@ class LogInForm extends StatelessWidget{
   Widget build(BuildContext context) {
     var provider = context.watch<AuthenticationPageProvider>();
     return Form(
+      key: provider.formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -20,6 +21,7 @@ class LogInForm extends StatelessWidget{
             decoration: const InputDecoration(
               labelText: "Email",
             ),
+            validator: provider.validateEmail,
             onChanged: (email) => provider.setEmail(email),
           ),
           const SizedBox(height: 20),
@@ -36,6 +38,7 @@ class LogInForm extends StatelessWidget{
                 padding: EdgeInsets.zero, 
               ),
             ),
+            validator: provider.validatePassword,
             onChanged: (password) => provider.setPassword(password),
           ),
           Padding(

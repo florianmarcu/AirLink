@@ -4,30 +4,22 @@ import 'package:transportation_app/models/models.dart';
 export 'package:provider/provider.dart';
 
 class HomePageProvider with ChangeNotifier{
+  var selectedTransportationType = TransportationType.public;
   var selectedDepartureLocation;
   var selectedArrivalLocation;
-  var selectedDepartureDate = DateTime.now().toLocal();
-  var selectedArrivalDate = DateTime.now().add(Duration(days: 7)).toLocal();
+  var selectedDepartureDateAndHour = DateTime.now().toLocal();
+  var selectedArrivalDateAndHour = DateTime.now().add(Duration(days: 7)).toLocal();
   var selectedTransportationCompany;
   bool roundTrip = false;
-  List<String> departureLocations = [
-    // "Bucuresti (toate locațiile)",
-    // "Bucuresti - Piata Unirii",
-    // "Ilfov"
-  ];
-  List<String> arrivalLocations = [
-      // "Aeroport International Henri Coanda",
-      // "Aeroport International Baneasa"
-  ];
+  Set<String> departureLocations = {};
+  Set<String> arrivalLocations = {};
   Map<String, dynamic> availableTrips = {};
-  List<Company> transportationCompanies = [
+  Set<Company> transportationCompanies = {
       Company(
         id: "(toate companiile)",
         name: "(toate companiile)"
       ),
-      // "Companie 1",
-      // "Companie 2",
-  ];
+  };
 
   HomePageProvider(){
     getData();
@@ -54,29 +46,56 @@ class HomePageProvider with ChangeNotifier{
     // this.arrivalLocations.addAll(arrivalLocations.toList());
     updateAvailableArrivalLocations();
     selectedArrivalLocation = this.arrivalLocations.first;
+    print(departureLocations);
     notifyListeners();
   }
 
   PageController pageController = PageController(initialPage: 0);
+
+  void updateAvailableOptions(String field){
+    switch (field){
+      case "transportation_type":
+        updateAvailableDepartureLocations();
+        updateAvailableArrivalLocations();
+        updateAvailableCompanies();
+      break;
+      case "departure":
+        updateAvailableArrivalLocations();
+        updateAvailableCompanies();
+      break;
+      case "arrival":
+        updateAvailableCompanies();
+      break;
+    }
+
+  }
+
+
   void updateSelectedDepartureLocation(String? departureLocation){
     selectedDepartureLocation = departureLocation!;
-    updateAvailableArrivalLocations();
+    updateAvailableOptions('departure');
     selectedArrivalLocation = arrivalLocations.first; 
-
+  
     notifyListeners();
   }
+  void updateTransportationType(int index){
+    selectedTransportationType = TransportationType.values[index];
+    updateAvailableOptions('transportation_type');
+    notifyListeners();
+  }
+
   void updateSelectedArrivalLocation(String? arrivalLocation){
     selectedArrivalLocation = arrivalLocation!;
 
     notifyListeners();
   }
   void updateSelectedDepartureDate(DateTime date){
-    selectedDepartureDate = date;
+    selectedDepartureDateAndHour = DateTime(date.year, date.month, date.day, selectedDepartureDateAndHour.hour,  selectedDepartureDateAndHour.minute);
 
     notifyListeners();
   }
   void updateSelectedReturnDate(DateTime date){
-    selectedArrivalDate = date;
+    selectedArrivalDateAndHour = DateTime(date.year, date.month, date.day, selectedArrivalDateAndHour.hour,  selectedArrivalDateAndHour.minute);
 
     notifyListeners();
   }
@@ -90,9 +109,72 @@ class HomePageProvider with ChangeNotifier{
 
     notifyListeners();
   }
+
+  void updateAvailableDepartureLocations(){
+    
+  }
+
   void updateAvailableArrivalLocations(){
-    arrivalLocations = List.from(availableTrips[selectedDepartureLocation]);
+    arrivalLocations = Set.from(availableTrips[selectedDepartureLocation]);
     print(arrivalLocations);
+  }
+
+  void updateAvailableCompanies(){
+    
+  }
+
+  /// Method that updates the flight time (Android)
+  void updateSelectedDepartureHourAndroid(TimeOfDay? time){
+    if(time != null)
+      selectedDepartureDateAndHour = DateTime(
+        selectedDepartureDateAndHour.year,
+        selectedDepartureDateAndHour.month,
+        selectedDepartureDateAndHour.day,
+        time.hour,
+        time.minute
+      );
+      
+    notifyListeners();
+  }
+
+  /// Method that updates the flight time (iOS)
+  void updateSelectedDepartureHourIOS(DateTime time){
+    selectedDepartureDateAndHour = DateTime(
+      selectedDepartureDateAndHour.year,
+      selectedDepartureDateAndHour.month,
+      selectedDepartureDateAndHour.day,
+      time.hour,
+      time.minute
+    );
+
+    notifyListeners();
+  }
+
+  /// Method that updates the flight time (Android)
+  void updateSelectedArrivalHourAndroid(TimeOfDay? time){
+    if(time != null)
+      selectedArrivalDateAndHour = DateTime(
+        selectedArrivalDateAndHour.year,
+        selectedArrivalDateAndHour.month,
+        selectedArrivalDateAndHour.day,
+        time.hour,
+        time.minute
+      );
+      
+    notifyListeners();
+  }
+
+  /// Method that updates the flight time (iOS)
+  void updateSelectedArrivalHourIOS(DateTime time){
+    selectedArrivalDateAndHour = DateTime(
+      selectedArrivalDateAndHour.year,
+      selectedArrivalDateAndHour.month,
+      selectedArrivalDateAndHour.day,
+      time.hour,
+      time.minute
+    );
+
+    notifyListeners();
   }
 
   void addAvailableTrip(Map<String, dynamic> trip){
@@ -107,3 +189,9 @@ enum TripType{
   roundtrip,
   oneway
 }
+
+enum TransportationType{
+  public,
+  private
+}
+var transportationTypeNames = ["Public", "Privat"];

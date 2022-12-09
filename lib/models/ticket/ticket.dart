@@ -26,6 +26,9 @@ class Ticket{
   double roundTripPriceDiscount;
   TicketStatus? status;
   bool cancelled;
+  String? photoURL;
+  List<dynamic>? types;
+  int? capacity;
 
   Ticket({
     this.id,
@@ -50,7 +53,10 @@ class Ticket{
     this.companyTicketRef,
     required this.roundTripPriceDiscount,
     required this.status,
-    required this.cancelled
+    required this.cancelled,
+    this.photoURL,
+    this.types,
+    this.capacity
   });
 
 }
@@ -94,7 +100,10 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     airCompanyName: data['air_company_name'],
     roundTripPriceDiscount: data['round_trip_price_discount'] == null ? 0 : data['round_trip_price_discount'].toDouble(),
     status: status,
-    cancelled: cancelled
+    cancelled: cancelled,
+    photoURL: data['photo_url'],
+    types: data['types'],
+    capacity: data['capacity']
   );
 }
 

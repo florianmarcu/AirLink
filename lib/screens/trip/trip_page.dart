@@ -14,22 +14,13 @@ import 'package:transportation_app/screens/trip/components/passenger_data_form.d
 import 'package:transportation_app/screens/trip/trip_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
-class TripPage extends StatefulWidget {
-  @override
-  State<TripPage> createState() => _TripPageState();
-}
-
-class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
-
-  @override
-  bool get wantKeepAlive => true;
+class TripPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var provider = context.watch<TripPageProvider?>();
-    var homeProvider = context.watch<HomePageProvider>();
+    var homePageProvider = context.watch<HomePageProvider>();
     var ticket = provider!.ticket;
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +48,7 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
         // )
         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
         title: Text(
-          !homeProvider.roundTrip
+          !homePageProvider.roundTrip
           ? "Detalii călătorie"
           : "Detalii călătorie dus"
         ),
@@ -71,12 +62,13 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
         onPressed: (){
           if(provider.isPassengerFormFieldComplete) {
             Navigator.push(context, PageRouteBuilder(
-              pageBuilder: (context, animation, secAnimation) => !homeProvider.roundTrip
+              pageBuilder: (context, animation, secAnimation) => !homePageProvider.roundTrip
               ? MultiProvider(
                 providers: [
-                  ChangeNotifierProvider(create: (_) => PaymentPageProvider()),
+                  ChangeNotifierProvider(create: (_) => PaymentPageProvider(wrapperHomePageProvider.currentUser, homePageProvider, ticket, provider, null, null)),
                   ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
-                  ChangeNotifierProvider.value(value: provider)
+                  ChangeNotifierProvider.value(value: provider),
+                  ChangeNotifierProvider.value(value: homePageProvider,),
                 ],
                 child: PaymentPage(),
               )
@@ -84,7 +76,7 @@ class _TripPageState extends State<TripPage> with AutomaticKeepAliveClientMixin{
                 providers: [
                   ChangeNotifierProvider(create: (_) => ArrivalTripPageProvider(ticket, provider, returnTicket: provider.returnTicket!)),
                   ChangeNotifierProvider.value(value: wrapperHomePageProvider,),
-                  ChangeNotifierProvider.value(value: homeProvider),
+                  ChangeNotifierProvider.value(value: homePageProvider),
                   ChangeNotifierProvider.value(value: provider)
                 ],
                 child: ArrivalTripPage(),

@@ -4,12 +4,11 @@ import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/models/models.dart';
 import 'package:transportation_app/screens/home/home_provider.dart';
 export 'package:provider/provider.dart';
-import 'dart:developer';
 
 
 class TripsPageProvider with ChangeNotifier{
 
-  HomePageProvider homeProvider;
+  HomePageProvider homePageProvider;
   Map<String, dynamic> activeFilters = {};
 
   bool isLoading = false;
@@ -18,7 +17,7 @@ class TripsPageProvider with ChangeNotifier{
 
   List<Ticket> tickets = [];
 
-  TripsPageProvider(this.homeProvider){
+  TripsPageProvider(this.homePageProvider){
     getData();
   }
 
@@ -34,13 +33,14 @@ class TripsPageProvider with ChangeNotifier{
 
     allTickets = [];
 
-    var selectedDepartureLocation = homeProvider.selectedDepartureLocation;
-    var selectedArrivalLocation = homeProvider.selectedArrivalLocation;
-    var selectedDepartureDate = homeProvider.selectedDepartureDate;
-    var selectedTransportationCompany = homeProvider.selectedTransportationCompany;
+    var selectedTransportationType = homePageProvider.selectedTransportationType;
+    var selectedDepartureLocation = homePageProvider.selectedDepartureLocation;
+    var selectedArrivalLocation = homePageProvider.selectedArrivalLocation;
+    var selectedDepartureDate = homePageProvider.selectedDepartureDateAndHour;
+    var selectedTransportationCompany = homePageProvider.selectedTransportationCompany;
     
     /// All companies are selected
-    if(selectedTransportationCompany == homeProvider.transportationCompanies.first){
+    if(selectedTransportationCompany == homePageProvider.transportationCompanies.first){
       var query = await FirebaseFirestore.instance.collection("companies").get();
       for (var i = 0; i < query.docs.length; i++) {
         var companyId = query.docs[i].id;
@@ -49,13 +49,13 @@ class TripsPageProvider with ChangeNotifier{
         var ticketsQuery = await query.docs[i].reference.collection("available_trips")
         .where("departure_location_name", isEqualTo: selectedDepartureLocation)
         .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
+        .where("type", isEqualTo: selectedTransportationType.name)
         .get();
         for (var j = 0; j < ticketsQuery.docs.length; j++) {
           for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {
             var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
             var arrivalTime = ticketsQuery.docs[j].data()['schedule'][k]['arrival_time'];
             ;
-            log(k.toString());
             allTickets.add(ticketDataToTicket(
               companyId, /// company id
               companyName, /// company name
@@ -80,21 +80,21 @@ class TripsPageProvider with ChangeNotifier{
       .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
       .get();
       for (var j = 0; j < ticketsQuery.docs.length; j++) {
-        for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {
-          var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
-          var arrivalTime = ticketsQuery.docs[j].data()['schedule'][k]['arrival_time'];
-          ;
-          log(k.toString());
-          allTickets.add(ticketDataToTicket(
-            companyId, /// company id
-            companyName, /// company name
-            companyAddress,
-            selectedDepartureDate, /// departure date
-            departureTime, ///departure time
-            arrivalTime, /// arrival time
-            ticketsQuery.docs[j].data()
-          ));
-        }
+        if(ticketsQuery.docs[j].data()['type'] == selectedTransportationType.name)
+          for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {
+            var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
+            var arrivalTime = ticketsQuery.docs[j].data()['schedule'][k]['arrival_time'];
+            ;
+            allTickets.add(ticketDataToTicket(
+              companyId, /// company id
+              companyName, /// company name
+              companyAddress,
+              selectedDepartureDate, /// departure date
+              departureTime, ///departure time
+              arrivalTime, /// arrival time
+              ticketsQuery.docs[j].data()
+            ));
+          }
       }
     } 
     tickets = List.from(allTickets);

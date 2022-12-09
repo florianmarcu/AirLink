@@ -59,7 +59,7 @@ class _ReturnDatePickerPageState extends State<ReturnDatePickerPage> {
               )
             ),
             child: CalendarDatePicker(
-              initialDate: provider.selectedArrivalDate, 
+              initialDate: provider.selectedArrivalDateAndHour, 
               firstDate: DateTime.now().toLocal(), 
               lastDate: DateTime.now().toLocal().add(Duration(days: 90)),
               onDateChanged: provider.updateSelectedReturnDate

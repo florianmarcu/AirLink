@@ -37,7 +37,7 @@ class ArrivalTripsPageProvider with ChangeNotifier{
 
     var selectedDepartureLocation = homeProvider.selectedArrivalLocation;
     var selectedArrivalLocation = homeProvider.selectedDepartureLocation;
-    var selectedDepartureDate = homeProvider.selectedArrivalDate;
+    var selectedDepartureDate = homeProvider.selectedArrivalDateAndHour;
     var selectedTransportationCompany = homeProvider.selectedTransportationCompany;
     
     /// All companies are selected
@@ -56,7 +56,6 @@ class ArrivalTripsPageProvider with ChangeNotifier{
             var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
             var arrivalTime = ticketsQuery.docs[j].data()['schedule'][k]['arrival_time'];
             ;
-            log(selectedDepartureDate.day.toString());
             allTickets.add(ticketDataToTicket(
               companyId, /// company id
               companyName, /// company name
