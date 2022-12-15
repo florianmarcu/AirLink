@@ -92,7 +92,7 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     companyId: companyId,
     companyAddress: companyAddress,
     price: data['price'].toDouble(),
-    paymentMethod: PaymentMethod.cash,
+    paymentMethod: data['payment_method'] != null ? (data['payment_method'] == PaymentMethod.cash ? PaymentMethod.cash: PaymentMethod.card) : PaymentMethod.cash,
     passengersNo: data['passenger_no'],
     passengerData: data['passenger_data'],
     userTicketRef: data['user_ticket_ref'],

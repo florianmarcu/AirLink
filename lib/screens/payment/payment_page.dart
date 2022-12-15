@@ -62,7 +62,7 @@ class PaymentPage extends StatelessWidget {
             if(result == null || result == false){
               provider.handlePaymentError(context, result);
             }
-            _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
+            else _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
           }
           else{
             _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
