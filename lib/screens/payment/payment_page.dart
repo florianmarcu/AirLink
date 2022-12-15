@@ -59,10 +59,13 @@ class PaymentPage extends StatelessWidget {
         : () async{
           if(provider.paymentMethod == PaymentMethod.card) {
             var result = await provider.pay(context, ticket, returnTicket, tripPageProvider, arrivalTripPageProvider);
-            if(result == null){
+            if(result == null || result == false){
               provider.handlePaymentError(context, result);
             }
-            // _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
+            _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
+          }
+          else{
+            _finishPayment(context, provider, wrapperHomePageProvider, tripPageProvider, arrivalTripPageProvider, ticket, returnTicket);
           }
         }, 
         label: Container(
