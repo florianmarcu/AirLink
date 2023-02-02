@@ -1,4 +1,5 @@
 import 'package:authentication/authentication.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
@@ -19,6 +20,12 @@ class WrapperHomePageProvider with ChangeNotifier{
   UserProfile? currentUser; 
   bool isLoading = false;
   List<Widget> screens = [];
+  /// Configuration data about all available locations
+  Map<String, dynamic>? configData;
+  /// The locations available in the app
+  List<Map<String, dynamic>>? locations;
+  /// The main location selected in the app
+  Map<String, dynamic>? mainLocation;
   GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
 
   PageController pageController = PageController();
@@ -69,6 +76,12 @@ class WrapperHomePageProvider with ChangeNotifier{
 
     HomePageProvider homePageProvider = HomePageProvider();
 
+    ///Get the configuration data from Cloud Firestore (such as available cities)
+    var query = FirebaseFirestore.instance.collection("config").doc("config");
+    var doc = await query.get();
+    configData = doc.data(); 
+    mainLocation = configData!['locations'][configData!['main_location']];
+    mainLocation!.addAll({"id": configData!['main_location']});
     
     screens = <Widget>[
       ChangeNotifierProvider<HomePageProvider>.value(  /// First screen - contains departure, arrival and date searching criteria

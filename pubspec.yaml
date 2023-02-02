@@ -24,6 +24,9 @@ dependencies:
   qr_flutter:
   flutter_stripe:
   http:
+  url_launcher:
+  uni_links:
+  google_maps_flutter:
 
 dev_dependencies:
   flutter_test:

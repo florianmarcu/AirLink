@@ -1,5 +1,7 @@
 import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:transportation_app/screens/stripe_connect_create_seller_account/stripe_connect_create_seller_account_page.dart';
+import 'package:transportation_app/screens/stripe_connect_create_seller_account/stripe_connect_create_seller_account_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
 
@@ -24,6 +26,17 @@ class AppDrawer extends StatelessWidget {
               ? Icon(Icons.person, size: 40, color: Theme.of(context).highlightColor,)
               : ClipOval(child: Image.network(user.photoURL!,  width: 30, height: 30, fit: BoxFit.cover), ),
             ),
+            wrapperHomePageProvider.currentUser!= null && wrapperHomePageProvider.currentUser!.isAdmin == true
+            ? TextButton(
+              child: Text(
+                "Adaugă seller"
+              ),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
+                create: (_) => StripeConnectCreateSellerAccountPageProvider(),
+                child: StripeConnectCreateSellerAccountPage()
+                ))),
+            )
+            : Container(),
             Expanded(
               child: Container(),
             ),

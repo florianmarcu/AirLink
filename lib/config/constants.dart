@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const kMonths = ["Ianuarie", "Februarie",  "Martie",  "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"];
 const kWeekdays ={"Monday" : "Luni", "Tuesday" : "Marți","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sâmbătă", "Sunday" : "Duminică"};
+const kGoogleMapsApiKey = "AIzaSyAnNnsSwvvVRSH87QzjaxFfy9Ig0n1jZl4";
 const Map<String, List<String>> kFilters = {
   "sorts":[
     "distance"

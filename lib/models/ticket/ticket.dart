@@ -1,15 +1,18 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Ticket{
   int? id;
   String? departureLocationId;
   String departureLocationName;
   String departureLocationAddress;
+  LatLng departureLocation;
   String? arrivalLocationId;
   String arrivalLocationName;  
   String arrivalLocationAddress;
+  LatLng arrivalLocation;
   DateTime departureTime;
   DateTime arrivalTime;
   String? companyId;
@@ -29,6 +32,7 @@ class Ticket{
   String? photoURL;
   List<dynamic>? types;
   int? capacity;
+  double applicationFee;
 
   Ticket({
     this.id,
@@ -56,7 +60,10 @@ class Ticket{
     required this.cancelled,
     this.photoURL,
     this.types,
-    this.capacity
+    this.capacity,
+    required this.applicationFee,
+    required this.departureLocation,
+    required this.arrivalLocation
   });
 
 }
@@ -103,7 +110,10 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     cancelled: cancelled,
     photoURL: data['photo_url'],
     types: data['types'],
-    capacity: data['capacity']
+    capacity: data['capacity'],
+    applicationFee: data['application_fee'] != null ? data['application_fee'].toDouble() : 0,
+    arrivalLocation: LatLng(data['arrival_location'].latitude, data['arrival_location'].longitude),
+    departureLocation: LatLng(data['departure_location'].latitude,  data['departure_location'].longitude)
   );
 }
 

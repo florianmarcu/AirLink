@@ -98,12 +98,21 @@ class PaymentPageProvider with ChangeNotifier{
         ),
       );
 
+      var stripeConnectAccountId = await FirebaseFirestore.instance.collection('companies').doc(ticket.companyId).get().then((doc) => doc.data()!['stripe_connect_account_id']);
+
+      var totalAmount = total!*100;
+      var applicationFeeAmount = (totalAmount / 100) * ticket.applicationFee;
+
+      Stripe.stripeAccountId = stripeConnectAccountId;
+      await Stripe.instance.applySettings();
 
       final paymentIntentResults = await _callPayEndpointMethodId(
         useStripeSdk: true,
         paymentMethodId: paymentMethod.id,
         currency: 'ron',
-        value: total!*100,
+        value: totalAmount,
+        applicationFeeAmount: applicationFeeAmount,
+        stripeConnectAccountId: stripeConnectAccountId
       );
 
       if(paymentIntentResults['erorr'] != null){
@@ -165,7 +174,9 @@ class PaymentPageProvider with ChangeNotifier{
     required bool useStripeSdk, 
     required String paymentMethodId,
     required String currency,
-    required double value
+    required double value,
+    required double applicationFeeAmount,
+    required String stripeConnectAccountId
     }) async{
       final url = Uri.parse(
         "https://us-central1-airlink-63554.cloudfunctions.net/StripePayEndpointMethodId"
@@ -178,7 +189,9 @@ class PaymentPageProvider with ChangeNotifier{
             'useStripeSdk': true,
             'paymentMethodId': paymentMethodId,
             'currency': 'ron',
-            'value': value
+            'value': value,
+            'applicationFeeAmount': applicationFeeAmount,
+            'stripeConnectAccountId': stripeConnectAccountId 
           }
         )
       );

@@ -9,47 +9,33 @@ class UserProfile{
   String displayName;
   final bool isAnonymous;
   String? phoneNumber;
-  bool isManager = false;
+  bool? isManager = false;
+  bool? isAdmin = false;
 
-  UserProfile({required this.uid, this.email, this.photoURL,required this.displayName, required this.isAnonymous, this.phoneNumber});
+  UserProfile({required this.uid, this.email, this.photoURL,required this.displayName, required this.isAnonymous, this.phoneNumber, required this.isManager, required this.isAdmin});
 }
 
 /// Converts a User to UserProfile
 Future<UserProfile?> userToUserProfile(User? user) async{
   if(user != null){
-    var userProfile = UserProfile(
-      uid: user.uid,
-      email: user.email,
-      photoURL: user.photoURL,
-      phoneNumber: user.phoneNumber,
-      displayName: user.displayName != null 
-        ? user.displayName !
-        : (user.email != null
-          ? user.email!.substring(0,user.email!.indexOf('@'))
-          : "Oaspete"),
-      isAnonymous : user.isAnonymous,
-    );
-
-    /// Fetch extra data from the user's document in Firestore (users/{user})  
     if(!user.isAnonymous) {
-      await FirebaseFirestore.instance.collection('users').doc(userProfile.uid).get()
-      .then((doc){
-        if(doc.data() != null){
-          userProfile.isManager = doc.data()!.containsKey('manager') && doc.data()!['manager'] == true;
-          if(doc.data()!.containsKey('contact_phone_number')){
-            userProfile.phoneNumber = doc.data()!['contact_phone_number'];
-          }
-          if(doc.data()!.containsKey('display_name')){
-            userProfile.displayName = doc.data()!['display_name'];
-          }
-        }
-      });
+      var data = (await FirebaseFirestore.instance.collection('users').doc(user.uid).get()).data();
+      var userProfile = UserProfile(
+        uid: user.uid,
+        email: user.email,
+        photoURL: user.photoURL,
+        displayName: user.displayName != null 
+          ? user.displayName !
+          : (user.email != null
+            ? user.email!.substring(0,user.email!.indexOf('@'))
+            : "Oaspete"),
+        isAnonymous : user.isAnonymous,
+        isManager: data!['manager'],
+        isAdmin: data['admin'],
+        phoneNumber: data['contact_phone_number'],
+      );
+      return userProfile;
     }
-    
-    return userProfile;
-
   }
-  else {
-    return null;
-  }
+  return null;
 }
