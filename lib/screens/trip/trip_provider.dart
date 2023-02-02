@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/models/models.dart';
 export 'package:provider/provider.dart';
 
@@ -13,7 +18,10 @@ class TripPageProvider with ChangeNotifier{
   String selectedAirline = "Tarom";
   int selectedPassengerNumber = 1;
   DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
+  // String? selectedDepartureLocationAddress;
+  // LatLng? selectedDepartureLocation;
   List<GlobalKey<FormFieldState>> phoneNumberFormKeys = [GlobalKey<FormFieldState>()];
+  bool isLoading = false;
 
 
   List passengerData = [
@@ -30,9 +38,40 @@ class TripPageProvider with ChangeNotifier{
   ]; 
 
   TripPageProvider(this.ticket, {this.returnTicket}){
+    // getData();
     updateMaxPassengerCapacity();
     updatePassengerFormFieldComplete();
     selectedDepartureDateAndHour = ticket.arrivalTime;
+  }
+
+  // Future<void> getData(){
+  //   _loading();
+
+  //   this.selectedDepartureLocationAddress.departureLocationName
+
+  //   _loading();
+  //   notifyListeners();
+  // }
+
+  void updateSelectedDepartureLocation(double latitude, double longitude){
+    ticket.departureLocation = LatLng(latitude, longitude);
+
+    notifyListeners();
+  }
+
+  void updateSelectedLocationAddress(String locationAddress){
+    ticket.departureLocationAddress = locationAddress;
+
+    notifyListeners();
+  }
+
+  void getAddressForLocation(double latitude, double longitude) async{
+    _loading();
+    var result = await http.get(
+      Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=${kGoogleMapsApiKey}")
+    );
+    var data = json.decode(result.body);
+    _loading();
   }
 
   void updateMaxPassengerCapacity(){
@@ -184,5 +223,11 @@ class TripPageProvider with ChangeNotifier{
       )
       return "Numărul introdus este invalid";
     return null;
+  }
+
+  _loading(){
+    isLoading = !isLoading;
+
+    notifyListeners();
   }
 }
