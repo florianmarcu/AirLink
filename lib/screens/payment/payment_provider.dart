@@ -115,7 +115,7 @@ class PaymentPageProvider with ChangeNotifier{
         stripeConnectAccountId: stripeConnectAccountId
       );
 
-      if(paymentIntentResults['erorr'] != null){
+      if(paymentIntentResults['error'] != null){
         return null;
       }
 
