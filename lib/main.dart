@@ -8,7 +8,6 @@ import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/screens/stripe_connect_redirect/stripe_connect_redirect_page.dart';
 import 'package:transportation_app/screens/wrapper/wrapper.dart';
 import 'package:transportation_app/screens/wrapper/wrapper_provider.dart';
-import 'package:transportation_app/config/.env';
 
 void main() async{
   await config();
@@ -51,10 +50,16 @@ Future<void> config() async{
   Stripe.publishableKey = stripePublishableKey;
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
-
+  // await db();
 }
 
 Future<void> db() async{
+  await FirebaseFirestore.instance.collectionGroup("tickets").get().then((query) => query.docs.forEach((doc) {
+    doc.reference.set({
+      "age_group": "adult"
+    },
+    SetOptions(merge: true));
+  }));
   // await FirebaseFirestore.instance.collectionGroup('tickets').get().then((query) => query.docs.forEach((doc) { 
   //   if(doc.data()['arrival_location_name'] == "Aeroport International Henri Coanda")
   //     doc.reference.set({

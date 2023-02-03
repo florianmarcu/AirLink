@@ -16,6 +16,7 @@ class ArrivalTripPageProvider with ChangeNotifier{
   int selectedPassengerNumber = 1;
   DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
   List<GlobalKey<FormFieldState>> phoneNumberFormKeys = [GlobalKey<FormFieldState>()];
+  bool? needChildrenSeat = false ;
 
 
   List passengerData = [
@@ -23,6 +24,7 @@ class ArrivalTripPageProvider with ChangeNotifier{
       "name" : Authentication.auth.currentUser!.displayName,
       "email" : Authentication.auth.currentUser!.email,
       "phone_number" : Authentication.auth.currentUser!.phoneNumber == null || Authentication.auth.currentUser!.phoneNumber == "" ? "" : Authentication.auth.currentUser!.phoneNumber,
+      "age_group": AgeGroup.adult,
       "luggage" : {
         "backpack" : true,
         "hand" : false,
@@ -30,6 +32,7 @@ class ArrivalTripPageProvider with ChangeNotifier{
       }
     }
   ]; 
+  
 
   ArrivalTripPageProvider(this.ticket, this.tripPageProvider, {required this.returnTicket}){
     updateMaxPassengerCapacity();
@@ -39,7 +42,14 @@ class ArrivalTripPageProvider with ChangeNotifier{
     isPassengerFormFieldComplete = tripPageProvider.isPassengerFormFieldComplete;
     //updatePassengerFormFieldComplete();
     selectedDepartureDateAndHour = returnTicket.arrivalTime;
+    needChildrenSeat = tripPageProvider.needChildrenSeat;
     // selectedDepartureDateAndHour = returnTicket.departureTime;
+  }
+
+  void updateNeedChildrenSeat(bool? needChildrenSeat){
+    this.needChildrenSeat = needChildrenSeat;
+
+    notifyListeners();
   }
 
   void updateMaxPassengerCapacity(){
@@ -105,6 +115,7 @@ class ArrivalTripPageProvider with ChangeNotifier{
           "name" : "",
           "email" : "",
           "phone_number" : "",
+          "age_group": AgeGroup.adult,
           "luggage" : {
             "backpack" : true,
             "hand" : false,
@@ -135,6 +146,12 @@ class ArrivalTripPageProvider with ChangeNotifier{
 
   void updatePassengerPhoneNumber(int index, String phoneNumber){
     passengerData[index]['phone_number'] = phoneNumber;
+
+    notifyListeners();
+  }
+  
+  void updatePassengerAgeGroup(int index, AgeGroup ageGroup){
+    passengerData[index]['age_group'] = ageGroup;
 
     notifyListeners();
   }
@@ -181,4 +198,9 @@ class ArrivalTripPageProvider with ChangeNotifier{
       return "Numărul introdus este invalid";
     return null;
   }
+}
+
+enum AgeGroup{
+  adult,
+  child
 }

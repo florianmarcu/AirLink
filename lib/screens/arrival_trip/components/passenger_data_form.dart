@@ -93,74 +93,119 @@ class PassengerDataForm extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width*0.03,
                       ),
-                      Container( /// Passenger's inputs
-                        width: MediaQuery.of(context).size.width*0.7,
-                        decoration: BoxDecoration(
-                          //color: Theme.of(context).splashColor,
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(30)
-                        ),
-                        child: Column(
-                          children: [
-                            TextFormField(/// Name input
-                              keyboardType: TextInputType.name,
-                              initialValue: provider.passengerData[index]['name'] != "" ? provider.passengerData[index]['name'] : null,
-                              decoration: InputDecoration(
-                                fillColor: Colors.transparent,
-                                labelText: "Nume",
-                                labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
-                              ),
-                              style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                              onChanged: (name) => provider.updatePassengerName(index, name),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container( /// Passenger's inputs
+                            width: MediaQuery.of(context).size.width*0.7,
+                            decoration: BoxDecoration(
+                              //color: Theme.of(context).splashColor,
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(30)
                             ),
-                            Container(
-                              height: 1,
-                              width: MediaQuery.of(context).size.width*0.7,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            TextFormField(/// Email input
-                              keyboardType: TextInputType.emailAddress,
-                              initialValue: provider.passengerData[index]['email'] != "" ? provider.passengerData[index]['email'] : null,
-                              decoration: InputDecoration(
-                                fillColor: Colors.transparent,
-                                labelText: "Email",
-                                labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
-                              ),
-                              style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                              onChanged: (email) => provider.updatePassengerEmail(index, email),
-                            ),
-                            Container(
-                              height: 1,
-                              width: MediaQuery.of(context).size.width*0.7,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            TextFormField(/// Phone number input
-                              key: provider.phoneNumberFormKeys[index],
-                              keyboardType: TextInputType.phone,
-                              validator: provider.validatePassengerPhoneNumber,
-                              initialValue: provider.passengerData[index]['phone_number'] != "" ? provider.passengerData[index]['phone_number'] : null,
-                              decoration: InputDecoration(
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(color: Colors.transparent),
+                            child: Column(
+                              children: [
+                                TextFormField(/// Name input
+                                  keyboardType: TextInputType.name,
+                                  initialValue: provider.passengerData[index]['name'] != "" ? provider.passengerData[index]['name'] : null,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.transparent,
+                                    labelText: "Nume",
+                                    labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
+                                  ),
+                                  style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
+                                  onChanged: (name) => provider.updatePassengerName(index, name),
                                 ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(color: Colors.transparent),
-                                ),                
-                                fillColor: Colors.transparent,
-                                labelText: "Telefon",
-                                labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
-                              ),
-                              style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
-                              onChanged: (phoneNumber) => provider.updatePassengerPhoneNumber(index, phoneNumber),
+                                Container(
+                                  height: 1,
+                                  width: MediaQuery.of(context).size.width*0.7,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                TextFormField(/// Email input
+                                  keyboardType: TextInputType.emailAddress,
+                                  initialValue: provider.passengerData[index]['email'] != "" ? provider.passengerData[index]['email'] : null,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.transparent,
+                                    labelText: "Email",
+                                    labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
+                                  ),
+                                  style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
+                                  onChanged: (email) => provider.updatePassengerEmail(index, email),
+                                ),
+                                Container(
+                                  height: 1,
+                                  width: MediaQuery.of(context).size.width*0.7,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                TextFormField(/// Phone number input
+                                  key: provider.phoneNumberFormKeys[index],
+                                  keyboardType: TextInputType.phone,
+                                  validator: provider.validatePassengerPhoneNumber,
+                                  initialValue: provider.passengerData[index]['phone_number'] != "" ? provider.passengerData[index]['phone_number'] : null,
+                                  decoration: InputDecoration(
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide(color: Colors.transparent),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide(color: Colors.transparent),
+                                    ),                
+                                    fillColor: Colors.transparent,
+                                    labelText: "Telefon",
+                                    labelStyle: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor)
+                                  ),
+                                  style: Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(color: Theme.of(context).primaryColor),
+                                  onChanged: (phoneNumber) => provider.updatePassengerPhoneNumber(index, phoneNumber),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      width: 20,
+                                      child: Checkbox(
+                                        value: provider.passengerData[index]['age_group'] == AgeGroup.adult, 
+                                        onChanged: (selected) => provider.updatePassengerAgeGroup(index, selected == true ? AgeGroup.adult : AgeGroup.child)
+                                      ),
+                                    ),
+                                    Text(
+                                      "Adult"
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      width: 20,
+                                      child: Checkbox(
+                                        value: provider.passengerData[index]['age_group'] == AgeGroup.child, 
+                                        onChanged: (selected) => provider.updatePassengerAgeGroup(index, selected == true ? AgeGroup.child : AgeGroup.adult)
+                                      ),
+                                    ),
+                                    Text(
+                                      "Copil"
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 20),
                   Container(
                     alignment: Alignment.centerRight,
                     width: 500,

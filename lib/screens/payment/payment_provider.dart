@@ -78,7 +78,7 @@ class PaymentPageProvider with ChangeNotifier{
     /// Create payment method
     try{
       final paymentMethod = await Stripe.instance.createPaymentMethod(
-        PaymentMethodParams.card(
+        params: PaymentMethodParams.card(
           paymentMethodData: PaymentMethodData(
             billingDetails: BillingDetails(
               email: Authentication.auth.currentUser!.email,
@@ -103,8 +103,8 @@ class PaymentPageProvider with ChangeNotifier{
       var totalAmount = total!*100;
       var applicationFeeAmount = (totalAmount / 100) * ticket.applicationFee;
 
-      Stripe.stripeAccountId = stripeConnectAccountId;
-      await Stripe.instance.applySettings();
+      // Stripe.stripeAccountId = stripeConnectAccountId;
+      // await Stripe.instance.applySettings();
 
       final paymentIntentResults = await _callPayEndpointMethodId(
         useStripeSdk: true,
@@ -116,7 +116,7 @@ class PaymentPageProvider with ChangeNotifier{
       );
 
       if(paymentIntentResults['error'] != null){
-        return null;
+        result = null;
       }
 
       /// NO 3DS
@@ -140,17 +140,17 @@ class PaymentPageProvider with ChangeNotifier{
             if(results['error'] != null){
               return null;
             }
-
+            else result = true;
           }
-
+          else result = true;
         }
         catch(e) {
           print(e.toString() + " error");
-          return null;
+          result = null;
         }
 
       }
-      result = true;
+      //result = true;
     }
     /// The user didn't fill the card info correctly
     on StripeException
@@ -239,6 +239,7 @@ class PaymentPageProvider with ChangeNotifier{
       "arrival_time": Timestamp.fromDate(ticket.arrivalTime),
       "passenger_no": tripPageProvider.selectedPassengerNumber,
       "passenger_data": tripPageProvider.passengerData,
+      "need_children_seat": tripPageProvider.needChildrenSeat,
       "phone_number": tripPageProvider.passengerData[0]['phone_number'],
       "price": ticket.price,
       "payment_method": this.paymentMethod.name,
@@ -298,6 +299,7 @@ class PaymentPageProvider with ChangeNotifier{
         "arrival_time": Timestamp.fromDate(returnTicket.arrivalTime),
         "passenger_no": arrivalTripPageProvider.selectedPassengerNumber,
         "passenger_data": arrivalTripPageProvider.passengerData,
+        "need_children_seat": arrivalTripPageProvider.needChildrenSeat,
         "phone_number": arrivalTripPageProvider.passengerData[0]['phone_number'],
         "price": returnTicket.price,
         "payment_method": this.paymentMethod.name,

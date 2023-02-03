@@ -420,6 +420,21 @@ class ArrivalTripPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
+                  Row(
+                    children: [
+                      Text("Am nevoie de scaun pentru copil", style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),),
+                      SizedBox(width: 30,),
+                      Checkbox(
+                        value: provider.needChildrenSeat, 
+                        onChanged: provider.updateNeedChildrenSeat,
+                        fillColor: MaterialStateProperty.all<Color>(Theme.of(context).canvasColor),
+                        checkColor: Theme.of(context).colorScheme.primary,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text("Companie aeriană", style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),),
                   Row(
                     children: [

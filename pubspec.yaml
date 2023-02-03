@@ -27,6 +27,7 @@ dependencies:
   url_launcher:
   uni_links:
   google_maps_flutter:
+  tuple:
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +68,7 @@ flutter:
     - assets/icons/fill-data.png
     - assets/icons/order-confirmed.png
     - assets/icons/ticket.png
-    - assets/icons/public.png
+    - assets/icons/economic.png
     - assets/icons/private.png
 
   # fonts:

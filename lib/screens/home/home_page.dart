@@ -471,7 +471,7 @@ class HomePage extends StatelessWidget {
                         );
                       },
                     ))
-                    /// Continue with the 'public' transport ticket flow
+                    /// Continue with the 'economic' transport ticket flow
                     : Navigator.push(context, PageRouteBuilder(
                       pageBuilder: (context, animation, secAnimation) => MultiProvider( /// Second screen - contains the departures available from the selected data
                         providers: [

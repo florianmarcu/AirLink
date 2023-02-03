@@ -22,6 +22,7 @@ class TripPageProvider with ChangeNotifier{
   // LatLng? selectedDepartureLocation;
   List<GlobalKey<FormFieldState>> phoneNumberFormKeys = [GlobalKey<FormFieldState>()];
   bool isLoading = false;
+  bool? needChildrenSeat = false;
 
 
   List passengerData = [
@@ -29,6 +30,7 @@ class TripPageProvider with ChangeNotifier{
       "name" : Authentication.auth.currentUser!.displayName,
       "email" : Authentication.auth.currentUser!.email,
       "phone_number" : Authentication.auth.currentUser!.phoneNumber == null || Authentication.auth.currentUser!.phoneNumber == "" ? "" : Authentication.auth.currentUser!.phoneNumber,
+      "age_group": AgeGroup.adult,
       "luggage" : {
         "backpack" : true,
         "hand" : false,
@@ -52,6 +54,12 @@ class TripPageProvider with ChangeNotifier{
   //   _loading();
   //   notifyListeners();
   // }
+
+  void updateNeedChildrenSeat(bool? needChildrenSeat){
+    this.needChildrenSeat = needChildrenSeat;
+
+    notifyListeners();
+  }
 
   void updateSelectedDepartureLocation(double latitude, double longitude){
     ticket.departureLocation = LatLng(latitude, longitude);
@@ -147,6 +155,7 @@ class TripPageProvider with ChangeNotifier{
           "name" : "",
           "email" : "",
           "phone_number" : "",
+          "age_group": AgeGroup.adult,
           "luggage" : {
             "backpack" : true,
             "hand" : false,
@@ -177,6 +186,12 @@ class TripPageProvider with ChangeNotifier{
   
   void updatePassengerPhoneNumber(int index, String phoneNumber){
     passengerData[index]['phone_number'] = phoneNumber;
+
+    notifyListeners();
+  }
+  
+  void updatePassengerAgeGroup(int index, AgeGroup ageGroup){
+    passengerData[index]['age_group'] = ageGroup;
 
     notifyListeners();
   }
@@ -230,4 +245,9 @@ class TripPageProvider with ChangeNotifier{
 
     notifyListeners();
   }
+}
+
+enum AgeGroup{
+  adult,
+  child
 }

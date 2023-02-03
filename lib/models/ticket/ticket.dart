@@ -33,6 +33,7 @@ class Ticket{
   List<dynamic>? types;
   int? capacity;
   double applicationFee;
+  bool? needChildrenSeat;
 
   Ticket({
     this.id,
@@ -63,7 +64,8 @@ class Ticket{
     this.capacity,
     required this.applicationFee,
     required this.departureLocation,
-    required this.arrivalLocation
+    required this.arrivalLocation,
+    required this.needChildrenSeat
   });
 
 }
@@ -113,7 +115,8 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     capacity: data['capacity'],
     applicationFee: data['application_fee'] != null ? data['application_fee'].toDouble() : 0,
     arrivalLocation: LatLng(data['arrival_location'].latitude, data['arrival_location'].longitude),
-    departureLocation: LatLng(data['departure_location'].latitude,  data['departure_location'].longitude)
+    departureLocation: LatLng(data['departure_location'].latitude,  data['departure_location'].longitude),
+    needChildrenSeat: data['need_children_seat']
   );
 }
 
