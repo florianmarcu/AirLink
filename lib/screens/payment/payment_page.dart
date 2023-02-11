@@ -91,13 +91,13 @@ class PaymentPage extends StatelessWidget {
               returnTicket != null
               ? Text("Drum plecare", style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 18),)
               : Container(),
-              TripDetails(ticket, tripPageProvider.selectedPassengerNumber, tripPageProvider.passengerData, homePageProvider.selectedTransportationType),
+              TripDetails(ticket, tripPageProvider.selectedPassengerNumber, tripPageProvider.passengerData, homePageProvider.selectedTransportationType, tripPageProvider.needChildrenSeat, ticket.childSeatPrice),
               SizedBox( height: 20,),
               returnTicket != null
               ? Text("Drum întoarcere", style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 18),)
               : Container(),
               returnTicket != null
-              ? TripDetails(returnTicket, arrivalTripPageProvider!.selectedPassengerNumber, arrivalTripPageProvider.passengerData, homePageProvider.selectedTransportationType)
+              ? TripDetails(returnTicket, arrivalTripPageProvider!.selectedPassengerNumber, arrivalTripPageProvider.passengerData, homePageProvider.selectedTransportationType, arrivalTripPageProvider.needChildrenSeat, returnTicket.childSeatPrice)
               : Container(),
               SizedBox(height: 15,),
               Row( /// Row of lines

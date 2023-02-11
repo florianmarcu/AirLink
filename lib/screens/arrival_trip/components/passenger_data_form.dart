@@ -163,7 +163,6 @@ class PassengerDataForm extends StatelessWidget {
                           ),
                           SizedBox(height: 20),
                           Container(
-                            width: 200,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -179,10 +178,11 @@ class PassengerDataForm extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Adult"
+                                      "Adult (7+ ani)"
                                     )
                                   ],
                                 ),
+                                SizedBox(width: 20),
                                 Row(
                                   children: [
                                     Container(
@@ -194,7 +194,7 @@ class PassengerDataForm extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Copil"
+                                      "Copil (0-7 ani)"
                                     )
                                   ],
                                 ),

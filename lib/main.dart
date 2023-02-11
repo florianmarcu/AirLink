@@ -54,9 +54,9 @@ Future<void> config() async{
 }
 
 Future<void> db() async{
-  await FirebaseFirestore.instance.collectionGroup("tickets").get().then((query) => query.docs.forEach((doc) {
+  await FirebaseFirestore.instance.collectionGroup("available_trips").get().then((query) => query.docs.forEach((doc) {
     doc.reference.set({
-      "age_group": "adult"
+      "child_seat_price": 40
     },
     SetOptions(merge: true));
   }));

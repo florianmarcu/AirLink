@@ -7,9 +7,11 @@ class TripDetails extends StatelessWidget {
   final Ticket ticket;
   final int passengersNo;
   final List passengerData;
+  final bool? childSeat;
+  final double childSeatPrice;
   final TransportationType transportationType;
   
-  TripDetails(this.ticket, this.passengersNo, this.passengerData, this.transportationType);
+  TripDetails(this.ticket, this.passengersNo, this.passengerData, this.transportationType, this.childSeat, this.childSeatPrice);
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +111,27 @@ class TripDetails extends StatelessWidget {
               ],
             ),
           ),
+          
+          Column(children: [
+            SizedBox(height: 20,),
+            Padding( /// Child seat
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Scaun copil", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)),
+                  Text.rich(TextSpan( 
+                    children: [
+                      TextSpan(
+                        text: childSeat == true ? "Da (${ticket.childSeatPrice} RON)" : "Nu", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 15)
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+            ),
+
+          ],),
           SizedBox(height: 20,),
           Padding( /// Ticket price
             padding: const EdgeInsets.symmetric(horizontal: 10.0),

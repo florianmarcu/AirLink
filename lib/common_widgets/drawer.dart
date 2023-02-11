@@ -1,5 +1,6 @@
 import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:transportation_app/screens/contact/contact_page.dart';
 import 'package:transportation_app/screens/stripe_connect_create_seller_account/stripe_connect_create_seller_account_page.dart';
 import 'package:transportation_app/screens/stripe_connect_create_seller_account/stripe_connect_create_seller_account_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
@@ -16,6 +17,7 @@ class AppDrawer extends StatelessWidget {
       child: Drawer(
         child: Column(
           children: [
+            /// Drawer header
             UserAccountsDrawerHeader(
               accountName: Text(
                 Authentication.auth.currentUser!.displayName == null ? "Oaspete" : Authentication.auth.currentUser!.displayName!, 
@@ -25,6 +27,27 @@ class AppDrawer extends StatelessWidget {
               currentAccountPicture: user.photoURL == null
               ? Icon(Icons.person, size: 40, color: Theme.of(context).highlightColor,)
               : ClipOval(child: Image.network(user.photoURL!,  width: 30, height: 30, fit: BoxFit.cover), ),
+            ),
+            /// Contact
+            MaterialButton(
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(
+                value: wrapperHomePageProvider,
+                child: ContactPage()))
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  children: [
+                    Icon(Icons.mail),
+                    SizedBox(width: 30),
+                    Text("Contact", style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: 16
+                      // fontWeight: FontWeight.bold
+                    ),)
+                  ],
+                ),
+              ),
             ),
             wrapperHomePageProvider.currentUser!= null && wrapperHomePageProvider.currentUser!.isAdmin == true
             ? TextButton(

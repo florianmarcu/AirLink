@@ -40,38 +40,40 @@ class ArrivalTripsPageProvider with ChangeNotifier{
     var selectedDepartureDate = homeProvider.selectedArrivalDateAndHour;
     var selectedTransportationCompany = homeProvider.selectedTransportationCompany;
     
-    /// All companies are selected
-    if(selectedTransportationCompany == homeProvider.transportationCompanies.first){
-      var query = await FirebaseFirestore.instance.collection("companies").get();
-      for (var i = 0; i < query.docs.length; i++) {
-        var companyId = query.docs[i].id;
-        var companyName = query.docs[i].data()['name'];
-        var companyAddress = query.docs[i].data()['address'];
-        var ticketsQuery = await query.docs[i].reference.collection("available_trips")
-        .where("departure_location_name", isEqualTo: selectedDepartureLocation)
-        .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
-        .get();
-        for (var j = 0; j < ticketsQuery.docs.length; j++) {
-          for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {
-            var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
-            var arrivalTime = ticketsQuery.docs[j].data()['schedule'][k]['arrival_time'];
-            ;
-            allTickets.add(ticketDataToTicket(
-              companyId, /// company id
-              companyName, /// company name
-              companyAddress,
-              selectedDepartureDate, /// departure date
-              departureTime, ///departure time
-              arrivalTime, /// arrival time
-              ticketsQuery.docs[j].data()
-            ));
-          }
-        }
-      }
-    }
-    /// Only one company is selected
-    else {
-      var doc = await FirebaseFirestore.instance.collection("companies").doc(selectedTransportationCompany.id).get();
+    // /// All companies are selected
+    // if(selectedTransportationCompany == homeProvider.transportationCompanies.first){
+    //   var query = await FirebaseFirestore.instance.collection("companies").get();
+    //   for (var i = 0; i < query.docs.length; i++) {
+    //     var companyId = query.docs[i].id;
+    //     var companyName = query.docs[i].data()['name'];
+    //     var companyAddress = query.docs[i].data()['address'];
+    //     var ticketsQuery = await query.docs[i].reference.collection("available_trips")
+    //     .where("departure_location_name", isEqualTo: selectedDepartureLocation)
+    //     .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
+    //     .get();
+    //     print(ticketsQuery.docs.length.toString() + " length");
+    //     for (var j = 0; j < ticketsQuery.docs.length; j++) {
+    //       print(ticketsQuery.docs[j].data()['schedule'].toString() + " schedule");
+    //       for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {
+    //         var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
+    //         var arrivalTime = ticketsQuery.docs[j].data()['schedule'][k]['arrival_time'];
+    //         ;
+    //         allTickets.add(ticketDataToTicket(
+    //           companyId, /// company id
+    //           companyName, /// company name
+    //           companyAddress,
+    //           selectedDepartureDate, /// departure date
+    //           departureTime, ///departure time
+    //           arrivalTime, /// arrival time
+    //           ticketsQuery.docs[j].data()
+    //         ));
+    //       }
+    //     }
+    //   }
+    // }
+    // /// Only one company is selected
+    // else {
+      var doc = await FirebaseFirestore.instance.collection("companies").doc(departureTicket.companyId).get();
       var companyId = doc.id;
       var companyName = doc.data()!['name'];
       var companyAddress = doc.data()!['name'];
@@ -96,7 +98,7 @@ class ArrivalTripsPageProvider with ChangeNotifier{
           ));
         }
       }
-    } 
+    // } 
     tickets = List.from(allTickets);
 
     _loading();

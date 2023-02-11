@@ -41,6 +41,18 @@ class PaymentPageProvider with ChangeNotifier{
       ? arrivalTripPageProvider!.selectedPassengerNumber * returnTicket.price
       : 0);
     }
+    tripPageProvider.needChildrenSeat == true
+    ? total = total! +  ticket.childSeatPrice
+    : total = total;
+    
+    if(returnTicket != null && arrivalTripPageProvider != null){
+      arrivalTripPageProvider.needChildrenSeat == true
+      ? total = total! +  returnTicket.childSeatPrice
+      : total = total;
+      total = total! - returnTicket.roundTripPriceDiscount;
+    }
+    
+
 
     _loading();
     notifyListeners();
@@ -78,7 +90,7 @@ class PaymentPageProvider with ChangeNotifier{
     /// Create payment method
     try{
       final paymentMethod = await Stripe.instance.createPaymentMethod(
-        params: PaymentMethodParams.card(
+        PaymentMethodParams.card(
           paymentMethodData: PaymentMethodData(
             billingDetails: BillingDetails(
               email: Authentication.auth.currentUser!.email,

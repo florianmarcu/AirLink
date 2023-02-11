@@ -51,6 +51,9 @@ class TripsPageProvider with ChangeNotifier{
         .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
         .where("type", isEqualTo: selectedTransportationType.name)
         .get();
+        print(ticketsQuery.docs.length);
+        print(selectedArrivalLocation);
+        print(selectedTransportationType.name);
         for (var j = 0; j < ticketsQuery.docs.length; j++) {
           for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {
             var departureTime = ticketsQuery.docs[j].data()['schedule'][k]['departure_time'];
