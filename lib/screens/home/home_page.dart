@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:transportation_app/config/config.dart';
 import 'package:transportation_app/models/models.dart';
@@ -27,8 +28,10 @@ class HomePage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: IconButton(
-                onPressed: () =>
-                    wrapperHomePageProvider.key.currentState!.openDrawer(),
+                onPressed: Authentication.auth.currentUser!.isAnonymous != true
+                ? () => 
+                    wrapperHomePageProvider.key.currentState!.openDrawer()
+                : null,
                 icon: Icon(
                   Icons.menu,
                   size: 30,
