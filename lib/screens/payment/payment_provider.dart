@@ -13,7 +13,7 @@ import 'package:transportation_app/screens/trip/trip_provider.dart';
 export 'package:provider/provider.dart';
 
 class PaymentPageProvider with ChangeNotifier{
-  models.PaymentMethod paymentMethod = models.PaymentMethod.cash;
+  models.PaymentMethod paymentMethod = models.PaymentMethod.card;
   bool isLoading = false;
   CardFormEditController cardFormEditController = CardFormEditController();
   PaymentStatus paymentStatus = PaymentStatus.initial;

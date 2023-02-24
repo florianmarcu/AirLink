@@ -160,17 +160,17 @@ class PaymentPage extends StatelessWidget {
                   else return Container();
                 },
               ),
-              ListTile( /// Choose cash
-                onTap: () => provider.updatePaymentMethod(PaymentMethod.cash),
-                contentPadding: EdgeInsets.zero,
-                title: Text("Numerar", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
-                leading: Radio(
-                  value: PaymentMethod.cash,
-                  groupValue: provider.paymentMethod,
-                  onChanged: provider.updatePaymentMethod,
-                ),
-              ),
-              SizedBox(height: 20,),
+              // ListTile( /// Choose cash
+              //   onTap: () => provider.updatePaymentMethod(PaymentMethod.cash),
+              //   contentPadding: EdgeInsets.zero,
+              //   title: Text("Numerar", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
+              //   leading: Radio(
+              //     value: PaymentMethod.cash,
+              //     groupValue: provider.paymentMethod,
+              //     onChanged: provider.updatePaymentMethod,
+              //   ),
+              // ),
+              // SizedBox(height: 20,),
               SizedBox(height: 100,),
             ],
           ),
