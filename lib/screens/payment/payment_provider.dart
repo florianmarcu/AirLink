@@ -90,7 +90,7 @@ class PaymentPageProvider with ChangeNotifier{
     /// Create payment method
     try{
       final paymentMethod = await Stripe.instance.createPaymentMethod(
-        PaymentMethodParams.card(
+        params: PaymentMethodParams.card(
           paymentMethodData: PaymentMethodData(
             billingDetails: BillingDetails(
               email: Authentication.auth.currentUser!.email,
