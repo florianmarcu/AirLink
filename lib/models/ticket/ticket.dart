@@ -35,6 +35,7 @@ class Ticket{
   double applicationFee;
   bool? needChildrenSeat;
   double childSeatPrice;
+  List<dynamic> destinations;
 
   Ticket({
     this.id,
@@ -67,7 +68,8 @@ class Ticket{
     required this.departureLocation,
     required this.arrivalLocation,
     required this.needChildrenSeat,
-    required this.childSeatPrice
+    required this.childSeatPrice,
+    required this.destinations
   });
 
 }
@@ -119,7 +121,8 @@ Ticket ticketDataToTicket(String companyId, String companyName, String companyAd
     arrivalLocation: LatLng(data['arrival_location'].latitude, data['arrival_location'].longitude),
     departureLocation: LatLng(data['departure_location'].latitude,  data['departure_location'].longitude),
     needChildrenSeat: data['need_children_seat'],
-    childSeatPrice: data['child_seat_price'] != null ? data['child_seat_price'].toDouble() : 0
+    childSeatPrice: data['child_seat_price'] != null ? data['child_seat_price'].toDouble() : 0,
+    destinations: data['destinations'] ?? []
   );
 }
 

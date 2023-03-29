@@ -8,21 +8,47 @@ class RegisterPageProvider with ChangeNotifier{
   String? password;
   bool passwordVisible = false;
   bool isLoading = false;
+  bool? isPrivacyPolicyAgreed = false;
+  bool? isTermsAndConditionsAgreed = false;
+
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void register(BuildContext context) async{
     _loading();
     
-    if(formKey.currentState!.validate()){
+    try{
+      if(isPrivacyPolicyAgreed != true)
+        throw FirebaseAuthException(code: "privacy-policy-not-accepted"); 
+      if(isTermsAndConditionsAgreed != true)
+        throw FirebaseAuthException(code: "terms-and-conditions-not-accepted");
+      if(formKey.currentState!.validate()){
       var result = await Authentication.registerWithEmailAndPassword(name!, email!, password!);
       if(result.runtimeType == FirebaseAuthException)
         _handleAuthError(context, result);
       else Navigator.pop(context);
     }
+    } on FirebaseAuthException
+    catch(err){
+        _handleAuthError(context, err);
+    }
+    
+    
 
     _loading();
 
+    notifyListeners();
+  }
+
+  void updateIsPrivacyPolicyAgreed(bool? isPrivacyPolicyAgreed){
+    this.isPrivacyPolicyAgreed = isPrivacyPolicyAgreed;
+    
+    notifyListeners();
+  }
+
+  void updateIsTermsAndConditionsAgreed(bool? isTermsAndConditionsAgreed){
+    this.isTermsAndConditionsAgreed = isTermsAndConditionsAgreed;
+    
     notifyListeners();
   }
 
@@ -71,18 +97,20 @@ class RegisterPageProvider with ChangeNotifier{
 
   /// Upon any error returned by the sign-in methods, shows a SnackBar accordignly
   void _handleAuthError(BuildContext context, FirebaseAuthException error){
-    var errorCodeToText = {
-      "email-already-in-use": "Există deja un cont asocial cu această adresă de email", 
-      "invalid-email": "Emailul introdus este invalid", 
-      "operation-not-allowed": "Serviciul nu este disponibil momentan", 
-      "weak-password": "Parola este prea slabă"
-    };
-    print(error.code);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorCodeToText[error.code]!),
-      )
-    ).closed
+    String displayedMessage = "";
+    switch(error.code){
+      case "user-already-exists":
+        displayedMessage = "Utilizatorul există deja";break;
+      case "privacy-policy-not-accepted":
+        displayedMessage = "Politica de confidențialitate trebuie acceptată.";break;
+      case "terms-and-conditions-not-accepted":
+        displayedMessage = "Termenii și condițiile trebuie acceptate.";break;
+      default:
+        displayedMessage = "A intervenit o eroare, încearcă mai târziu";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(displayedMessage) 
+    )).closed
     .then((value) => ScaffoldMessenger.of(context).clearSnackBars());
   }
 

@@ -132,16 +132,16 @@ class PaymentPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20,),
-              ListTile( /// Choose card
-                onTap: () => provider.updatePaymentMethod(PaymentMethod.card),
-                contentPadding: EdgeInsets.zero,
-                title: Text("Card", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
-                leading: Radio(
-                  value: PaymentMethod.card,
-                  groupValue: provider.paymentMethod,
-                  onChanged: provider.updatePaymentMethod,
-                ),
-              ),
+              // ListTile( /// Choose card
+              //   onTap: () => provider.updatePaymentMethod(PaymentMethod.card),
+              //   contentPadding: EdgeInsets.zero,
+              //   title: Text("Card", style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18)),
+              //   leading: Radio(
+              //     value: PaymentMethod.card,
+              //     groupValue: provider.paymentMethod,
+              //     onChanged: provider.updatePaymentMethod,
+              //   ),
+              // ),
               Builder(
                 builder: (context){
                   var cardFormEditController = stripe.CardFormEditController();

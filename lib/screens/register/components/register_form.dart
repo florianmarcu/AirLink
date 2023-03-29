@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transportation_app/screens/register/register_provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class RegisterForm extends StatelessWidget {
 
@@ -73,6 +74,75 @@ class RegisterForm extends StatelessWidget {
                 ),)
               ],
             ),),
+          ),
+          ///Privacy policy
+          Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.02),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Am citit și accept ", style: Theme.of(context).textTheme.bodyText2
+                      ),
+                      WidgetSpan(
+                        child: GestureDetector(
+                        onTap: () async{
+                          if(await canLaunchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit")){
+                            launchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit");
+                          }
+                        },
+                          child: Text("politica de confidențialitate", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Theme.of(context).colorScheme.secondary)),
+                        )
+                      ),
+                      TextSpan(
+                        text: "."
+                      ),
+                    ]
+                  ),
+                ),
+                Checkbox(
+                  fillColor: MaterialStateProperty.all<Color>(Colors.green),
+                  side: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 1),
+                  value: provider.isPrivacyPolicyAgreed, 
+                  onChanged: provider.updateIsPrivacyPolicyAgreed
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.02),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text.rich(TextSpan(children: [
+                  TextSpan(
+                    text: "Am citit și accept ", style: Theme.of(context).textTheme.bodyText2
+                  ),
+                  WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () async{
+                        if(await canLaunchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit")){
+                          launchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit");
+                        }
+                      },
+                      child: Text("termenii și condițiile", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Theme.of(context).colorScheme.secondary)),
+                    )
+                  ),
+                  TextSpan(
+                    text: ".", style: Theme.of(context).textTheme.bodyText2
+                  ),
+                ])),
+                Checkbox(
+                  fillColor: MaterialStateProperty.all<Color>(Colors.green),
+                  side: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 1),
+                  value: provider.isTermsAndConditionsAgreed, 
+                  onChanged: provider.updateIsTermsAndConditionsAgreed
+                )
+              ],
+            ),
           ),
           SizedBox(height: 15,),
           TextButton(

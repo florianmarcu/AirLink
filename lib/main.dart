@@ -50,61 +50,110 @@ Future<void> config() async{
   Stripe.publishableKey = stripePublishableKey;
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
-  // await db();
+  await db();
 }
 
 Future<void> db() async{
-  await FirebaseFirestore.instance.collectionGroup("available_trips").get().then((query) => query.docs.forEach((doc) {
-    doc.reference.set({
-      "child_seat_price": 40
-    },
-    SetOptions(merge: true));
-  }));
-  // await FirebaseFirestore.instance.collectionGroup('tickets').get().then((query) => query.docs.forEach((doc) { 
-  //   if(doc.data()['arrival_location_name'] == "Aeroport International Henri Coanda")
-  //     doc.reference.set({
-  //       "arrival_location": GeoPoint(44.570914012204554, 26.084938011347685)
-  //     }, SetOptions(merge: true));
-  //   else if(doc.data()['departure_location_name'] == "Aeroport International Henri Coanda"){
-  //     doc.reference.set({
-  //       "departure_location": GeoPoint(44.570914012204554, 26.084938011347685)
-  //     }, SetOptions(merge: true));
-  //   }
+  // await FirebaseFirestore.instance.collection('companies')
+  // .doc('al1')
+  // .collection('available_trips')
+  // .get()
+  // .then((query) {
+  //   query.docs.forEach((doc) async{ 
+  //     await FirebaseFirestore.instance.collection('companies')
+  //     .doc('kirvad')
+  //     .collection('available_trips')
+  //     .doc()
+  //     .set(
+  //       doc.data(),
+  //       SetOptions(merge: true)
+  //     ); 
+  //   });
+  // });
 
-  //   if(doc.data()['arrival_location_name'] == "Constanta")
-  //     doc.reference.set({
-  //       "arrival_location": GeoPoint(44.159843409856265, 28.636184436779125)
-  //     }, SetOptions(merge: true));
-  //   else if(doc.data()['departure_location_name'] == "Constanta"){
-  //     doc.reference.set({
-  //       "departure_location": GeoPoint(44.159843409856265, 28.636184436779125)
-  //     }, SetOptions(merge: true));
-  //   }
-
-  //   if(doc.data()['arrival_location_name'] == "Tulcea")
-  //     doc.reference.set({
-  //       "arrival_location": GeoPoint(45.17136147152622, 28.79117687296845)
-  //     }, SetOptions(merge: true));
-  //   else if(doc.data()['departure_location_name'] == "Tulcea"){
-  //     doc.reference.set({
-  //       "departure_location": GeoPoint(45.17136147152622, 28.79117687296845)
-  //     }, SetOptions(merge: true));
-  //   }
-  // }));
-
-  // await FirebaseFirestore.instance.collection("companies").get().then((query) => query.docs.forEach((doc) async{
-  //   await doc.reference.collection('available_trips').get().then((q) {
-  //     q.docs.forEach((d) {d.reference.set({"application_fee": 3}, SetOptions(merge: true)); });      
-  //   }
-  //   );
-  // }));
-  var query = await FirebaseFirestore.instance.collection("companies").doc("kirvad").collection("available_trips").get();
-  query.docs.forEach((doc) { 
-    doc.reference.set(
-      {
-        "round_trip_discount": 0
-      },
-      SetOptions(merge: true)
-    );
-  });
+  // await FirebaseFirestore.instance.collection('companies')
+  // .doc('kirvad')
+  // .collection('available_trips')
+  // .get()
+  // .then((query) {
+  //   query.docs.forEach((doc) {
+  //     if(doc.data()['type'] == "economic")
+  //     doc.reference.set(
+  //       {
+  //         'destinations': [
+  //           "23 AUGUST",
+  //           "2 CANTOANE",
+  //           "AGIGEA",
+  //           "AGIGHIOL",
+  //           "ALBESTI",
+  //           "AMZACEA",
+  //           "BABADAG",
+  //           "BAIA",
+  //           "BUCU",
+  //           "CALARASI",
+  //           "CASTELU",
+  //           "CATALOI",
+  //           "CERNAVODA",
+  //           "CIUCUROVA",
+  //           "COMANA",
+  //           "CORBU",
+  //           "COSTINESTI",
+  //           'CUMPANA',
+  //           "DRAJNA NOUA",
+  //           'DULCESTI',
+  //           'EFORIE NORD',
+  //           'EFORIE SUD',
+  //           'FACLIA',
+  //           'FETESTI',
+  //           'GARLICIU',
+  //           'GIURGENI',
+  //           'HARSOVA',
+  //           'JURILOVCA',
+  //           'LAZU',
+  //           'LIMANU',
+  //           'LUMINA',
+  //           'MAMAIA',
+  //           'MAMAIA SAT',
+  //           'MANGALIA',
+  //           'MEDGIDIA',
+  //           'MIHAIL KOGALNICEANU',
+  //           'MIRCEA VODA',
+  //           'MOSNENI',
+  //           'MURFATLAR',
+  //           'NALBANT',
+  //           'NAVODARI',
+  //           'NEGRU VODA',
+  //           'NEPTUN',
+  //           'NICOLAE BALCESCU',
+  //           'NISIPARI',
+  //           'OLIMP',
+  //           'OVIDIU',
+  //           'PALAZU MARE',
+  //           'PECINEAGA',
+  //           'PITESTI',
+  //           'POARTA ALBA',
+  //           'POIANA',
+  //           'RAMNICU VALCEA',
+  //           'SALIGNY',
+  //           'SARAIU',
+  //           'SARICHIOI',
+  //           'SATU NOU',
+  //           'SLAVA RUSA',
+  //           'SLOBOZIA',
+  //           'ST. CEL MARE',
+  //           'TANDAREI',
+  //           'TECHIRGHIOL',
+  //           'TOPOLOG',
+  //           'TOPRAISAR',
+  //           'TULCEA',
+  //           'TUZLA',
+  //           'VALU LUI TRAIAN',
+  //           'VENUS',
+  //           'ZEBIL',
+  //         ]
+  //       },
+  //       SetOptions(merge: true)
+  //     );
+  //   });
+  // });
 }

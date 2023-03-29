@@ -243,14 +243,16 @@ class PaymentPageProvider with ChangeNotifier{
       "company_id": ticket.companyId,
       "company_name": ticket.companyName,
       "company_address": ticket.companyAddress,
+      "departure_location": GeoPoint(ticket.departureLocation.latitude, ticket.departureLocation.longitude),
       "departure_location_name" : ticket.departureLocationName,
       "departure_location_address": ticket.departureLocationAddress,
+      "arrival_location": GeoPoint(ticket.arrivalLocation.latitude, ticket.arrivalLocation.longitude),
       "arrival_location_name": ticket.arrivalLocationName,
       "arrival_location_address": ticket.arrivalLocationAddress,
       "departure_time": Timestamp.fromDate(ticket.departureTime),
       "arrival_time": Timestamp.fromDate(ticket.arrivalTime),
       "passenger_no": tripPageProvider.selectedPassengerNumber,
-      "passenger_data": tripPageProvider.passengerData,
+      "passenger_data": toFirestoreMap(tripPageProvider.passengerData),
       "need_children_seat": tripPageProvider.needChildrenSeat,
       "phone_number": tripPageProvider.passengerData[0]['phone_number'],
       "price": ticket.price,
@@ -303,14 +305,16 @@ class PaymentPageProvider with ChangeNotifier{
         "company_id": returnTicket.companyId,
         "company_name": returnTicket.companyName,
         "company_address": returnTicket.companyAddress,
+        "departure_location": GeoPoint(returnTicket.departureLocation.latitude, returnTicket.departureLocation.longitude),
         "departure_location_name" : returnTicket.departureLocationName,
         "departure_location_address": returnTicket.departureLocationAddress,
+        "arrival_location": GeoPoint(returnTicket.arrivalLocation.latitude, returnTicket.arrivalLocation.longitude),
         "arrival_location_name": returnTicket.arrivalLocationName,
         "arrival_location_address": returnTicket.arrivalLocationAddress,
         "departure_time": Timestamp.fromDate(returnTicket.departureTime),
         "arrival_time": Timestamp.fromDate(returnTicket.arrivalTime),
         "passenger_no": arrivalTripPageProvider.selectedPassengerNumber,
-        "passenger_data": arrivalTripPageProvider.passengerData,
+        "passenger_data": toFirestoreMap(arrivalTripPageProvider.passengerData),
         "need_children_seat": arrivalTripPageProvider.needChildrenSeat,
         "phone_number": arrivalTripPageProvider.passengerData[0]['phone_number'],
         "price": returnTicket.price,
@@ -352,6 +356,23 @@ class PaymentPageProvider with ChangeNotifier{
       formatDateToHourAndMinutes(ticket.arrivalTime)!, 
       ticketData
     );
+  }
+
+  /// Converts the Age Group field
+  List<dynamic> toFirestoreMap(List<dynamic> data){
+    List<dynamic> list = [];
+    for(int j = 0; j < data.length; j++){
+      var item = data[j];
+      Map<String, dynamic> result = {};
+      for(int i = 0; i < item.keys.length; i++){
+        if(item.keys.toList()[i] == "age_group"){
+          result.addAll({"age_group" : item[item.keys.toList()[i]].toString()});
+        }
+        else result.addAll({item.keys.toList()[i] : item[item.keys.toList()[i]]});
+      }
+      list.add(result);
+    }
+    return list;
   }
 
   void handlePaymentError(BuildContext context, result) {

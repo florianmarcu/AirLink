@@ -13,6 +13,8 @@ import 'package:transportation_app/screens/arrival_trip/components/passenger_dat
 import 'package:transportation_app/screens/trip/trip_provider.dart';
 import 'package:transportation_app/screens/wrapper_home/wrapper_home_provider.dart';
 
+import 'components/trip_destinations.dart';
+
 class ArrivalTripPage extends StatelessWidget {
 
   @override
@@ -267,7 +269,18 @@ class ArrivalTripPage extends StatelessWidget {
               ),
             ),
           ),
-          
+          SizedBox( height: 20,),
+          Center(
+            child: GestureDetector(
+              onTap: () => Navigator.push(context, MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider.value(
+                  value: provider,
+                  child: TripDestinationsPage(),
+                )
+              )),
+              child: Text("Destinații intermediare", style: Theme.of(context).textTheme.bodyMedium!.copyWith( decoration: TextDecoration.underline),),
+            ),
+          ),
           SizedBox( height: 20,),
           // Padding(
           //   padding: const EdgeInsets.symmetric(horizontal: 10),
