@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
                 left: 20, right: 20, top: 10, bottom: 30),
             children: [
               Container( /// Transport type
-                height: 90,
+                height: 100,
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(bottom: 20),
                 child: ListView.separated(

@@ -96,8 +96,8 @@ class TicketsPage extends StatelessWidget {
                                 Container( /// upper half
                                   height: 180,
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 20, 
-                                    vertical: 10
+                                    horizontal: 15, 
+                                    // vertical: 10
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,45 +125,47 @@ class TicketsPage extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
-                                          Column( /// Departure side
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Container( /// Departure location
-                                                width: MediaQuery.of(context).size.width*0.3,
-                                                child: Text(
-                                                  ticket.departureLocationName,
-                                                  style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                              SizedBox(height: 20,),
-                                              Column( /// Departure date and time 
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Container( /// Departure date
-                                                    //width: MediaQuery.of(context).size.width*0.3,
-                                                    child: Text(
-                                                      formatDateToWeekdayAndShortDate(ticket.arrivalTime),
-                                                      style: Theme.of(context).textTheme.subtitle2,
-                                                    ),
+                                          Expanded(
+                                            child: Column( /// Departure side
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Container( /// Departure location
+                                                  // width: MediaQuery.of(context).size.width*0.3,
+                                                  child: Text(
+                                                    ticket.departureLocationName,
+                                                    style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
                                                   ),
-                                                  SizedBox(height: 5,),
-                                                  Container( /// Departure time
-                                                    //width: MediaQuery.of(context).size.width*0.3,
-                                                    child: Row(
-                                                      children: [
-                                                        Image.asset(localAsset("time"), width: 18, color: Theme.of(context).colorScheme.secondary,),
-                                                        SizedBox(width: 7,),
-                                                        Text(
-                                                          formatDateToHourAndMinutes(ticket.departureTime)!,
-                                                          style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 21),
-                                                        ),
-                                                      ],
+                                                ),
+                                                // SizedBox(height: 20,),
+                                                Column( /// Departure date and time 
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container( /// Departure date
+                                                      //width: MediaQuery.of(context).size.width*0.3,
+                                                      child: Text(
+                                                        formatDateToWeekdayAndShortDate(ticket.arrivalTime),
+                                                        style: Theme.of(context).textTheme.subtitle2,
+                                                      ),
                                                     ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
+                                                    SizedBox(height: 5,),
+                                                    Container( /// Departure time
+                                                      //width: MediaQuery.of(context).size.width*0.3,
+                                                      child: Row(
+                                                        children: [
+                                                          Image.asset(localAsset("time"), width: 18, color: Theme.of(context).colorScheme.secondary,),
+                                                          SizedBox(width: 7,),
+                                                          Text(
+                                                            formatDateToHourAndMinutes(ticket.departureTime)!,
+                                                            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 21),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           Column( /// Travel time
                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -175,46 +177,50 @@ class TicketsPage extends StatelessWidget {
                                               ),
                                             ],
                                           ), 
-                                          Column( /// Arrival side
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Container( /// Arrival location
-                                                width: MediaQuery.of(context).size.width*0.3,
-                                                child: Text(
-                                                  ticket.arrivalLocationName,
-                                                  style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
-                                                  textAlign: TextAlign.end,
-                                                ),
-                                              ),
-                                              SizedBox(height: 15,),
-                                              Column( /// Arrival date and time
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                children: [
-                                                  Container( /// Arrival date
-                                                    //width: MediaQuery.of(context).size.width*0.3,
-                                                    child: Text(
-                                                      formatDateToWeekdayAndShortDate(ticket.arrivalTime),
-                                                      style: Theme.of(context).textTheme.subtitle2,
-                                                    ),
+                                          Expanded(
+                                            child: Column( /// Arrival side
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Container( /// Arrival location
+                                                  // width: MediaQuery.of(context).size.width*0.3,
+                                                  child: Text(
+                                                    ticket.arrivalLocationName,
+                                                    style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
+                                                    textAlign: TextAlign.end,
                                                   ),
-                                                  SizedBox(height: 5,),
-                                                  Container( /// Arrival time
-                                                    //width: MediaQuery.of(context).size.width*0.3,
-                                                    child: Row(
-                                                      children: [
-                                                        Image.asset(localAsset("time"), width: 18, color: Theme.of(context).colorScheme.secondary,),
-                                                        SizedBox(width: 7,),
-                                                        Text(
-                                                          formatDateToHourAndMinutes(ticket.arrivalTime)!,
-                                                          style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 21),
-                                                        ),
-                                                      ],
+                                                ),
+                                                // SizedBox(height: 15,),
+                                                Column( /// Arrival date and time
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: [
+                                                    Container( /// Arrival date
+                                                      //width: MediaQuery.of(context).size.width*0.3,
+                                                      child: Text(
+                                                        formatDateToWeekdayAndShortDate(ticket.arrivalTime),
+                                                        style: Theme.of(context).textTheme.subtitle2,
+                                                        textAlign: TextAlign.right,
+                                                      ),
                                                     ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
+                                                    SizedBox(height: 5,),
+                                                    Container( /// Arrival time
+                                                      //width: MediaQuery.of(context).size.width*0.3,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          Image.asset(localAsset("time"), width: 18, color: Theme.of(context).colorScheme.secondary,),
+                                                          SizedBox(width: 7,),
+                                                          Text(
+                                                            formatDateToHourAndMinutes(ticket.arrivalTime)!,
+                                                            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 21),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           )
                                         ],
                                       ),
