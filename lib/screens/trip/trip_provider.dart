@@ -13,9 +13,9 @@ class TripPageProvider with ChangeNotifier{
   Ticket? returnTicket;
   
   List<int> passengerNumberList = [1,2,3,4,5,6,7,8];
-  List<String> airlineList = ["Tarom", "Wizz Air", "Ryanair", "Blue Air", ""];
+  List<String> airlineList = kAirlineCompanies;
   bool isPassengerFormFieldComplete = false;
-  String selectedAirline = "Tarom";
+  String selectedAirline = "TAROM";
   int selectedPassengerNumber = 1;
   DateTime selectedDepartureDateAndHour = DateTime.now().toLocal();
   // String? selectedDepartureLocationAddress;

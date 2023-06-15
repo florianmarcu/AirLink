@@ -9,24 +9,42 @@ class TicketPageProvider with ChangeNotifier{
 
   TicketPageProvider(this.ticket);
 
-  Future<void> cancelTicket() async{
+  Future<void> cancelTicket(BuildContext context) async{
     _loading();
+    var now = DateTime.now().toLocal();
+    var threshold = 24;
+    if(ticket.departureTime.difference(now) < Duration(hours: threshold)){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+        "Rezervarea nu poate fi anulată cu mai puțin de $threshold ore înainte."
+      )));
+    }
 
-    await ticket.userTicketRef!.set(
-      {
-        "cancelled" : true
-      },
-      SetOptions(merge: true)
-    );
+    else{
+      await ticket.userTicketRef!.set(
+        {
+          "cancelled" : true
+        },
+        SetOptions(merge: true)
+      );
 
-    await ticket.companyTicketRef!.set(
-      {
-        "cancelled" : true
-      },
-      SetOptions(merge: true)
-    );
+      await ticket.companyTicketRef!.set(
+        {
+          "cancelled" : true
+        },
+        SetOptions(merge: true)
+      );
 
-    ticket.cancelled = true;
+      ticket.cancelled = true;
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Biletul a fost anulat."
+          ),
+        )
+      );
+    }
+
 
     _loading();
     notifyListeners();

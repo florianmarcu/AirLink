@@ -8,7 +8,7 @@ class HomePageProvider with ChangeNotifier{
   var selectedTransportationType = TransportationType.economic;
   var selectedDepartureLocation;
   var selectedArrivalLocation;
-  var selectedDepartureDateAndHour = DateTime.now().toLocal();
+  var selectedDepartureDateAndHour = DateTime.now().toLocal().add(Duration(hours: 12));
   var selectedArrivalDateAndHour = DateTime.now().add(Duration(days: 7)).toLocal();
   var selectedTransportationCompany;
   bool roundTrip = false;
@@ -55,6 +55,9 @@ class HomePageProvider with ChangeNotifier{
 
     updateAvailableArrivalLocations();
     selectedArrivalLocation = this.arrivalLocations.first;
+
+    updateAvailableOptions('transportation_type');
+    
     print(departureLocations);
     notifyListeners();
   }
@@ -77,6 +80,7 @@ class HomePageProvider with ChangeNotifier{
       break;
     }
 
+    notifyListeners();
   }
 
 
@@ -125,6 +129,8 @@ class HomePageProvider with ChangeNotifier{
 
   void updateAvailableArrivalLocations(){
     arrivalLocations = Set.from(availableTrips[selectedDepartureLocation]!.map((e) => e.item1));
+
+    notifyListeners();
   }
 
   void updateAvailableCompanies(){

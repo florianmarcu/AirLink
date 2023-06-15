@@ -49,7 +49,7 @@ class ArrivalTripPage extends StatelessWidget {
         //   ],
         // )
         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(210, 30), bottomRight: Radius.elliptical(210, 30))),
-        title: Text("Detalii călătorie întors"),
+        title: Text("Detalii călătorie întors", style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(fontSize: 20),),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
@@ -119,6 +119,22 @@ class ArrivalTripPage extends StatelessWidget {
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 5),
         children: [
+          Center(child: Row(
+            children: [
+              CircleAvatar(
+                radius: 13,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Icon(
+                  Icons.warning,
+                  size: 15,
+                  color: Theme.of(context).canvasColor,
+                ),
+              ), 
+              SizedBox(width: 5,),
+              Text("Toate datele și orele sunt în fusul orar local")
+            ],
+          ),),
+          SizedBox(height: 5),
           Padding( /// hours and lines
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Container(
@@ -126,7 +142,7 @@ class ArrivalTripPage extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(10)
               ),
-              height: 220,
+              height: 230,
               child: Stack(
                 children: [
                   Column(
@@ -278,7 +294,7 @@ class ArrivalTripPage extends StatelessWidget {
                   child: TripDestinationsPage(),
                 )
               )),
-              child: Text("Destinații intermediare", style: Theme.of(context).textTheme.bodyMedium!.copyWith( decoration: TextDecoration.underline),),
+              child: Text("Destinații intermediare", style: Theme.of(context).textTheme.bodyMedium!.copyWith( decoration: TextDecoration.underline,),),
             ),
           ),
           SizedBox( height: 20,),
@@ -433,7 +449,7 @@ class ArrivalTripPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
+                  Wrap(
                     children: [
                       Text("Am nevoie de scaun pentru copil", style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),),
                       SizedBox(width: 30,),

@@ -80,7 +80,7 @@ class ArrivalTripsPage extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Alege întoarcerea"),
+            Text("Alege întoarcerea", style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(fontSize: 20),),
             Text.rich(TextSpan(children: [
               WidgetSpan(child: Icon(Icons.calendar_today, size: 16,),),
               WidgetSpan(child: SizedBox(width: 10,)),

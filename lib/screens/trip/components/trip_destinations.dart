@@ -33,7 +33,8 @@ class TripDestinationsPage extends StatelessWidget {
         title: Column(
           children: [
             Text(
-              "Destinații intermediare"
+              "Destinații intermediare",
+              style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(fontSize: 20),
             ),
             Text(
               "(ordine alfabetică)", style: Theme.of(context).textTheme.bodyMedium,

@@ -43,6 +43,7 @@ class PrivateArrivalTripsPageProvider with ChangeNotifier{
     var ticketsQuery = await doc.reference.collection("available_trips")
     .where("departure_location_name", isEqualTo: selectedDepartureLocation)
     .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
+    .where("type", isEqualTo: selectedTransportationType.name)
     .get();
     print(ticketsQuery.docs.length);
     for (var j = 0; j < ticketsQuery.docs.length; j++) {

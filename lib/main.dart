@@ -54,6 +54,20 @@ Future<void> config() async{
 }
 
 Future<void> db() async{
+  // await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: "florian.marcu23@gmail.com")
+  // .get().then((value) async{
+  //   if(value.docs.length == 1){
+  //     var doc = value.docs[0];
+  //     await doc.reference.collection('tickets').get().then((value) {
+  //       value.docs.forEach((element) async {
+  //         if(element.data()['arrival_location'] == null || element.data()['departure_location'] == null){
+  //           await element.data()['company_ticket_ref']?.delete();
+  //           await element.reference.delete();
+  //         }
+  //       });
+  //     });
+  //   }
+  // });
   // await FirebaseFirestore.instance.collection('companies')
   // .doc('al1')
   // .collection('available_trips')

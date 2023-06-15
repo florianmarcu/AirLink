@@ -10,7 +10,7 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = context.watch<RegisterPageProvider>();
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           /// The circle in the upper right corner

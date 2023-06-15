@@ -75,11 +75,12 @@ class RegisterForm extends StatelessWidget {
               ],
             ),),
           ),
+          SizedBox(height: 30,),
           ///Privacy policy
           Padding(
             padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.02),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Wrap(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text.rich(
                   TextSpan(
@@ -90,8 +91,8 @@ class RegisterForm extends StatelessWidget {
                       WidgetSpan(
                         child: GestureDetector(
                         onTap: () async{
-                          if(await canLaunchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit")){
-                            launchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit");
+                          if(await canLaunchUrlString("https://firebasestorage.googleapis.com/v0/b/airlink-63554.appspot.com/o/documents%2FAirlink%20-%20Politica.pdf?alt=media&token=4aa51df1-2c5f-40ff-9900-5859a05dfad6")){
+                            launchUrlString("https://firebasestorage.googleapis.com/v0/b/airlink-63554.appspot.com/o/documents%2FAirlink%20-%20Politica.pdf?alt=media&token=4aa51df1-2c5f-40ff-9900-5859a05dfad6");
                           }
                         },
                           child: Text("politica de confidențialitate", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Theme.of(context).colorScheme.secondary)),
@@ -124,8 +125,8 @@ class RegisterForm extends StatelessWidget {
                   WidgetSpan(
                     child: GestureDetector(
                       onTap: () async{
-                        if(await canLaunchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit")){
-                          launchUrlString("https://docs.google.com/document/d/1vmaFEANBHtdUPUddlWhl5sr6u9Gko_CwAOo9dkaelDc/edit");
+                        if(await canLaunchUrlString("https://firebasestorage.googleapis.com/v0/b/airlink-63554.appspot.com/o/documents%2FAirLink%20-%20T%26C.pdf?alt=media&token=9c4652f9-4218-449f-9163-fa7001c4efa3")){
+                          launchUrlString("https://firebasestorage.googleapis.com/v0/b/airlink-63554.appspot.com/o/documents%2FAirLink%20-%20T%26C.pdf?alt=media&token=9c4652f9-4218-449f-9163-fa7001c4efa3");
                         }
                       },
                       child: Text("termenii și condițiile", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Theme.of(context).colorScheme.secondary)),

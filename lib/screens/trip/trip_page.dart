@@ -19,6 +19,7 @@ class TripPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Navigator.pop(context);
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var provider = context.watch<TripPageProvider?>();
     var homePageProvider = context.watch<HomePageProvider>();
@@ -51,7 +52,8 @@ class TripPage extends StatelessWidget {
         title: Text(
           !homePageProvider.roundTrip
           ? "Detalii călătorie"
-          : "Detalii călătorie dus"
+          : "Detalii călătorie dus",
+          style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(fontSize: 20),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -139,6 +141,22 @@ class TripPage extends StatelessWidget {
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 5),
         children: [
+          Center(child: Row(
+            children: [
+              CircleAvatar(
+                radius: 13,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Icon(
+                  Icons.warning,
+                  size: 15,
+                  color: Theme.of(context).canvasColor,
+                ),
+              ), 
+              SizedBox(width: 5,),
+              Text("Toate datele și orele sunt în fusul orar local!")
+            ],
+          ),),
+          SizedBox(height: 5),
           Padding( /// hours and lines
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Container(
@@ -146,7 +164,7 @@ class TripPage extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(10)
               ),
-              height: 220,
+              height: 230,
               child: Stack(
                 children: [
                   Column(
@@ -456,7 +474,7 @@ class TripPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
+                  Wrap(
                     children: [
                       Text("Am nevoie de scaun pentru copil", style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.normal),),
                       SizedBox(width: 30,),

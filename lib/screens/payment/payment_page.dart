@@ -148,6 +148,7 @@ class PaymentPage extends StatelessWidget {
                   if(provider.paymentMethod == PaymentMethod.card){
                     return stripe.CardFormField(
                       enablePostalCode: false,
+                      countryCode: "ro",
                       controller: cardFormEditController,
                       style: stripe.CardFormStyle(
                         borderRadius: 20,

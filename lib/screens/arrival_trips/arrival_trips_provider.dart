@@ -39,6 +39,7 @@ class ArrivalTripsPageProvider with ChangeNotifier{
     var selectedArrivalLocation = homeProvider.selectedDepartureLocation;
     var selectedDepartureDate = homeProvider.selectedArrivalDateAndHour;
     var selectedTransportationCompany = homeProvider.selectedTransportationCompany;
+    var selectedTransportationType = homeProvider.selectedTransportationType;
     
     // /// All companies are selected
     // if(selectedTransportationCompany == homeProvider.transportationCompanies.first){
@@ -80,6 +81,7 @@ class ArrivalTripsPageProvider with ChangeNotifier{
       var ticketsQuery = await doc.reference.collection("available_trips")
       .where("departure_location_name", isEqualTo: selectedDepartureLocation)
       .where("arrival_location_name", isEqualTo: selectedArrivalLocation)
+      .where("type", isEqualTo: selectedTransportationType.name)
       .get();
       for (var j = 0; j < ticketsQuery.docs.length; j++) {
         for (var k = 0; k < ticketsQuery.docs[j].data()['schedule'].length; k++) {

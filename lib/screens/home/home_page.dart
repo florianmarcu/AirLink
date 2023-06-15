@@ -337,8 +337,28 @@ class HomePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 20),
-                              Text("Data de întoarcere",
-                                style: Theme.of(context).textTheme.subtitle2),
+                              Row(
+                                children: [
+                                  Text("Data de întoarcere",
+                                    style: Theme.of(context).textTheme.subtitle2
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Tooltip(
+                                    child: CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: Theme.of(context).canvasColor,
+                                      child: Icon(
+                                        Icons.question_mark_rounded,
+                                        size: 13,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ), 
+                                    preferBelow: false,
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: "Data și ora de întoarcere sunt în fusul orar local!",
+                                  )
+                                ],
+                              ),
                               GestureDetector(
                                 onTap: () => Navigator.push(
                                   context,
@@ -389,8 +409,27 @@ class HomePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 20),
-                              Text("Ora de întoarcere",
-                                style: Theme.of(context).textTheme.subtitle2),
+                              Row(
+                                children: [
+                                  Text("Ora de întoarcere",
+                                    style: Theme.of(context).textTheme.subtitle2),
+                                  SizedBox(width: 5,),
+                                  Tooltip(
+                                    child: CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: Theme.of(context).canvasColor,
+                                      child: Icon(
+                                        Icons.question_mark_rounded,
+                                        size: 13,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ), 
+                                    preferBelow: false,
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: "Data și ora de întoarcere sunt în fusul orar local!",
+                                  )
+                                ],
+                              ),
                               GestureDetector(
                                 onTap: () async{
                                 if(!Platform.isIOS){

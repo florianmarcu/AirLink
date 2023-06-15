@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:transportation_app/screens/arrival_trip/arrival_trip_provider.dart';
 import 'package:transportation_app/screens/trip/trip_provider.dart';
 
 class TripDestinationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var provider = context.watch<TripPageProvider>();
+    var provider;
+    try{
+      provider = context.watch<TripPageProvider>();
+    }
+    catch(err){
+      provider = context.watch<ArrivalTripPageProvider>();
+    }
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
@@ -33,7 +40,8 @@ class TripDestinationsPage extends StatelessWidget {
         title: Column(
           children: [
             Text(
-              "Destinații intermediare"
+              "Destinații intermediare",
+              style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(fontSize: 20),
             ),
             Text(
               "(ordine alfabetică)", style: Theme.of(context).textTheme.bodyMedium,

@@ -31,7 +31,7 @@ class PrivateTripsPage extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Alege tipul călătoriei dus"),
+            Text("Alege tipul călătoriei dus", style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(fontSize: 20),),
             SizedBox(height: 5),
             Text.rich(TextSpan(children: [
               WidgetSpan(child: Icon(Icons.calendar_today, size: 16,),),

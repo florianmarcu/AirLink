@@ -62,15 +62,7 @@ class TicketPage extends StatelessWidget {
               ],
           ));
           if(cancel){
-            await provider.cancelTicket();
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "Biletul a fost anulat."
-                ),
-              )
-            );
+            await provider.cancelTicket(context);
           }
           else{
             // Navigator.pop(context);
