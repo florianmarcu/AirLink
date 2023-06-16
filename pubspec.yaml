@@ -4,7 +4,7 @@ description: An app that helps the user book a shuttle to his airport
 
 publish_to: none
 
-version: 1.0.0+2
+version: 1.0.1+3
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
