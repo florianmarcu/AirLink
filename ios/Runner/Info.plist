@@ -60,9 +60,9 @@
 		</dict>
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo Library Access Warning</string>
+	<string>AirLink needs access to your Photo Library to let you update your profile picture</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Photo Library Access Warning</string>
+	<string>AirLink needs access to your Camera to let you update your profile icture</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

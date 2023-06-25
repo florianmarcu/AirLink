@@ -128,6 +128,19 @@ class Authentication{
     }
   }
 
+  static Future<bool> deleteAccount(String email, String password) async{
+    try{
+      await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(EmailAuthProvider.credential(email: email, password: password));
+      await FirebaseAuth.instance.currentUser!.delete();
+    }
+    on FirebaseAuthException
+    catch(e){
+      print(e);  
+      return false;
+    }
+    return true;
+  }
+
   static Future<void> updateProfileImage(String path) async{
     try{
       var ref = FirebaseStorage.instance.ref().child("users/${auth.currentUser!.uid}/profile.jpg");

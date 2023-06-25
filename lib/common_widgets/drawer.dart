@@ -11,22 +11,38 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
-    var user = context.watch<WrapperHomePageProvider>().currentUser!;
+    var user = context.watch<WrapperHomePageProvider>().currentUser;
     return ClipRRect(
       borderRadius: BorderRadius.only(topRight: Radius.circular(50), bottomRight: Radius.circular(50)),
       child: Drawer(
         child: Column(
           children: [
             /// Drawer header
-            UserAccountsDrawerHeader(
-              accountName: Text(
-                Authentication.auth.currentUser!.displayName == null ? "Oaspete" : Authentication.auth.currentUser!.displayName!, 
-                style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 25, color: Theme.of(context).canvasColor)
-              ), 
-              accountEmail: Text(user.email != null ? user.email! : "", style: Theme.of(context).textTheme.caption),
-              currentAccountPicture: user.photoURL == null
-              ? Icon(Icons.person, size: 40, color: Theme.of(context).highlightColor,)
-              : ClipOval(child: Image.network(user.photoURL!,  width: 30, height: 30, fit: BoxFit.cover), ),
+            Builder(
+              builder: (context) {
+                return user == null
+                ? Container(
+                  padding: EdgeInsets.all(20),
+                  alignment: Alignment.bottomLeft,
+                  height: 160,
+                  width: double.infinity,
+                  color: Theme.of(context).primaryColor,
+                  child: Text(
+                    Authentication.auth.currentUser!.displayName == null ? "Oaspete" : Authentication.auth.currentUser!.displayName!, 
+                    style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 25, color: Theme.of(context).canvasColor)
+                  ),
+                )
+                : UserAccountsDrawerHeader(
+                  accountName: Text(
+                    Authentication.auth.currentUser!.displayName == null ? "Oaspete" : Authentication.auth.currentUser!.displayName!, 
+                    style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 25, color: Theme.of(context).canvasColor)
+                  ), 
+                  accountEmail: Text(user.email != null ? user.email! : "", style: Theme.of(context).textTheme.caption),
+                  currentAccountPicture: user.photoURL == null
+                  ? Icon(Icons.person, size: 40, color: Theme.of(context).highlightColor,)
+                  : ClipOval(child: Image.network(user.photoURL!,  width: 30, height: 30, fit: BoxFit.cover), ),
+                );
+              }
             ),
             /// Contact
             MaterialButton(
@@ -65,7 +81,7 @@ class AppDrawer extends StatelessWidget {
             ),
             TextButton(
               child: Text(
-                !user.isAnonymous
+                user != null && !user.isAnonymous
                 ? "Ieși din cont"
                 : "Log In"
               ),

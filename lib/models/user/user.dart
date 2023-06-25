@@ -30,9 +30,9 @@ Future<UserProfile?> userToUserProfile(User? user) async{
             ? user.email!.substring(0,user.email!.indexOf('@'))
             : "Oaspete"),
         isAnonymous : user.isAnonymous,
-        isManager: data!['manager'],
-        isAdmin: data['admin'],
-        phoneNumber: data['contact_phone_number'],
+        isManager: data !=null ? data['manager'] : null,
+        isAdmin: data !=null ? data['admin'] : null,
+        phoneNumber: data !=null ? data['contact_phone_number'] : null,
       );
       return userProfile;
     }

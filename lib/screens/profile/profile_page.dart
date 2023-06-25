@@ -1,4 +1,5 @@
 import 'package:authentication/authentication.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:transportation_app/config/config.dart';
@@ -184,7 +185,6 @@ class ProfilePage extends StatelessWidget {
                 ])),
               ),
               SizedBox(height: 20),
-
               /// Payment Method
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
@@ -205,11 +205,194 @@ class ProfilePage extends StatelessWidget {
                         color:
                             Theme.of(context).primaryColor.withOpacity(0.6))),
               ),
+              SizedBox(height: 100),
+              GestureDetector(
+                onTap: () async{
+                  await showFirstAccountDeletionDialog(context, provider);
+                },
+                child: Center(
+                  child: Text("Șterge contul", style: Theme.of(context).textTheme.bodyLarge!.copyWith(decoration: TextDecoration.underline),),
+                ),
+              )
             ],
           ),
-          
         ],
       ),
     );
   }
 }
+
+showFirstAccountDeletionDialog(BuildContext context, ProfilePageProvider provider) => showCupertinoDialog(
+  context: context, 
+  barrierDismissible: true,
+  builder: (context){
+    return Dialog(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        height: 180,
+        // width: 220,
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Text(
+              "Urmează să ștergi contul. Toate datele asociate contului tău vor fi șterse",
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18),
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  style: Theme.of(context).textButtonTheme.style!.copyWith(
+                    side: MaterialStatePropertyAll(BorderSide(width: 1, color: Theme.of(context).primaryColor)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30), )),
+                    backgroundColor: MaterialStatePropertyAll(Theme.of(context).highlightColor)),
+                  onPressed: (){
+                    Navigator.pop(context);
+                    showSecondAccountDeletionDialog(context ,provider);
+                  },
+                  child: Text(
+                    "Continuă",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                SizedBox(width: 30,),
+                TextButton(
+                  style: Theme.of(context).textButtonTheme.style!.copyWith(backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor)),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Renunță"),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+);
+
+showSecondAccountDeletionDialog(BuildContext context, ProfilePageProvider provider) => showCupertinoDialog(
+  context: context, 
+  barrierDismissible: true,
+  builder: (context){
+    return Dialog(
+      child: Container(
+        height: 180,
+        // width: 200,
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Text(
+              "Ești sigur? Ștergerea este ireversibilă!",
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18),
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  style: Theme.of(context).textButtonTheme.style!.copyWith(
+                    side: MaterialStatePropertyAll(BorderSide(width: 1, color: Theme.of(context).primaryColor)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30), )),
+                    backgroundColor: MaterialStatePropertyAll(Theme.of(context).highlightColor)),
+                  onPressed: () async{
+                    Navigator.pop(context);
+                    await showThirdAccountDeletionDialog(context, provider);
+                  },
+                  child: Text(
+                    "Șterge",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                SizedBox(width: 30,),
+                TextButton(
+                  style: Theme.of(context).textButtonTheme.style!.copyWith(backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor)),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: Text("Renunță"),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+);
+
+showThirdAccountDeletionDialog(BuildContext context, ProfilePageProvider provider) => showCupertinoDialog(
+  context: context, 
+  barrierDismissible: true,
+  builder: (context){
+    return Dialog(
+      child: Container(
+        height: 300,
+        width: 200,
+        padding: EdgeInsets.all(10),
+        child: Form(
+          key: provider.formKey,
+          child: Column(
+            children: [
+              Text(
+                "Pentru a continua trebuie să te reautentifici",
+                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                validator: provider.validateEmail,
+                initialValue: provider.email,
+                style: Theme.of(context).textTheme.labelMedium,
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).canvasColor
+                ),
+                onChanged: provider.updateEmail,
+              ),
+              SizedBox(height: 20,),
+              TextFormField(
+                validator: provider.validatePassword,
+                initialValue: provider.password,
+                style: Theme.of(context).textTheme.labelMedium,
+                obscureText: true,
+                decoration: InputDecoration(
+                  fillColor: Theme.of(context).canvasColor
+                ),
+                onChanged: provider.updatePassword
+              ),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      style: Theme.of(context).textButtonTheme.style!.copyWith(
+                        side: MaterialStatePropertyAll(BorderSide(width: 1, color: Theme.of(context).primaryColor)),
+                        shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30), )),
+                        backgroundColor: MaterialStatePropertyAll(Theme.of(context).highlightColor)),
+                    onPressed: () async{
+                      var res = await provider.deleteAccount();
+                      if(res)
+                        Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Șterge",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                  SizedBox(width: 30,),
+                  TextButton(
+                    style: Theme.of(context).textButtonTheme.style!.copyWith(backgroundColor: MaterialStatePropertyAll(Theme.of(context).primaryColor)),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    child: Text("Renunță"),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+);
